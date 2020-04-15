@@ -1,6 +1,5 @@
 package engine.audio;
 
-import com.sun.media.sound.WaveFileReader;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -8,6 +7,7 @@ import static org.lwjgl.openal.AL10.*;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -90,9 +90,8 @@ class AudioData {
 	 * @return new AudioData
 	 */
 	public static @Nullable	AudioData create(final @NotNull String path) {
-		final WaveFileReader reader = new WaveFileReader();
 		try {
-			return create(reader.getAudioInputStream(support.File.getURL("/media/audio/" + path).openStream()));
+			return create(AudioSystem.getAudioInputStream(support.File.getURL("/media/audio/" + path)));
 		} catch(final IOException | UnsupportedAudioFileException e) {
 			System.err.println("Error while loading audio file: " + path);
 			e.printStackTrace();
