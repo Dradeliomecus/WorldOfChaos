@@ -1,0 +1,12 @@
+TODO list :
+
+- Finish the menu
+- Finish the Map class
+  - Loading one map to another
+  - Optimize it for better performances
+- Physics Engine
+- Audio Engine
+
+TODO further list :
+- Verify/resolve bug with depth >= 1.02f
+- Finish the map (txt)
