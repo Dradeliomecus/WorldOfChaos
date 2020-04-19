@@ -37,7 +37,12 @@ public class TestTree extends PhysicsObject {
 
 	@Override
 	protected float getPhysicsHeight() {
-		return Options.TILE_SIZE;
+		return Options.TILE_SIZE / 2;
+	}
+
+	@Override
+	protected int getPhysicsHeightAsInt() {
+		return (int)(Options.TILE_SIZE_POS / 2);
 	}
 
 }

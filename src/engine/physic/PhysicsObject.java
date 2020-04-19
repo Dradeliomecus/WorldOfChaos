@@ -217,7 +217,7 @@ public abstract class PhysicsObject extends GameObject {
 	 * @return new AABBCollider
 	 */
 	protected AABBCollider asAABBCollider() {
-		return new AABBCollider(this.getPositionReference(), this.getWidthAsInt(), this.getHeightAsInt());
+		return new AABBCollider(this.getPositionReference(), this.getPhysicsWidthAsInt(), this.getPhysicsHeightAsInt());
 	}
 
 	/**
@@ -293,13 +293,13 @@ public abstract class PhysicsObject extends GameObject {
 
 		// TODO: There might be a faster way to do this.
 		final float tileSpeed = Map.getInstance().getTileSpeedOn(this.getPosition(), this.getPhysicsWidth(), this.getPhysicsHeight());
-		final Vector2f velocity = this.getVelocity().mul((float)(delta * Options.TILE_SIZE * (this.canFly() ? 1 : tileSpeed)));
-		final Position futurePos = this.getPositionReference().addXYAsFloat(velocity);
+		final @NotNull Vector2f velocity = this.getVelocity().mul((float)(delta * Options.TILE_SIZE * (this.canFly() ? 1 : tileSpeed)));
+		final @NotNull Position futurePos = this.getPositionReference().addXYAsFloat(velocity);
 
 		int length = this.getPositionReference().distanceToXY(futurePos);
-		final Position posToSet = new Position(futurePos);
+		final @NotNull Position posToSet = new Position(futurePos);
 
-		/*final ArrayList<Collider> potentialColliders = new ArrayList<>();
+		final @NotNull ArrayList<Collider> potentialColliders = new ArrayList<>();
 
 		// Adding all neighbours tiles as potential colliders
 		if(!this.canFly()) {
@@ -307,18 +307,29 @@ public abstract class PhysicsObject extends GameObject {
 		}
 
 		// Check with all other Physics Object
-		for(final PhysicsObject object : PhysicsEngine.getObjects()) {
+		for(final @NotNull PhysicsObject object : PhysicsEngine.getObjects()) {
 			if(object == this) {
 				continue;
 			}
 
-			// TODO: Check first if the object isn't too far away. If so, don't add it to the list.
+			if(this.willCollideWith(futurePos, object)) {
+				potentialColliders.add(object.asCollider());
+			}
+		}
 
-			// TODO: Add function to convert Physics Object to an instance of Collider.
-		}*/
+		for(final Collider potentialCollider : potentialColliders) {
+			final Position colPos = this.handleCollision(futurePos, potentialCollider);
+
+			if(this.getPositionReference().distanceToXY(colPos) <= length) {
+				length = this.getPositionReference().distanceToXY(colPos);
+				posToSet.set(colPos);
+			}
+		}
+
+		futurePos.set(posToSet); // TODO: Is futurePos necessary?
 
 		// Checking collisions with tiles (new).
-		if(!this.canFly()) {
+		/*if(!this.canFly()) {
 			for(final AABBCollider tileCollider : Map.getInstance().getTilesOnAsColliders(futurePos, this.getPhysicsWidthAsInt(), this.getPhysicsHeightAsInt(), this.canWalk(), this.canSwim())) {
 				final Position colPos = this.handleCollision(futurePos, tileCollider);
 
@@ -329,7 +340,7 @@ public abstract class PhysicsObject extends GameObject {
 			}
 
 			futurePos.set(posToSet);
-		}
+		}*/
 
 		this.setPosition(futurePos.asVector2f());
 	}
@@ -343,8 +354,9 @@ public abstract class PhysicsObject extends GameObject {
 	 */
 	private @NotNull Position handleCollision(final @NotNull Position futurePos, final @NotNull Collider collider) { // TODO: Also take in rotation and scale ...
 		// First we need to know which corner(s) of (this) is the problem.
-		final Position[] previousCorners = {this.getPositionReference(), this.getPositionReference().addX(this.getWidthAsInt()), this.getPositionReference().addXY(this.getWidthAsInt(), this.getHeightAsInt()), this.getPositionReference().addY(this.getHeightAsInt())};
-		final Position[] corners = {futurePos, futurePos.addX(this.getWidthAsInt()), futurePos.addXY(this.getWidthAsInt(), this.getHeightAsInt()), futurePos.addY(this.getHeightAsInt())};
+		// TODO: Does this corner system work with all colliders?
+		final Position[] previousCorners = {this.getPositionReference(), this.getPositionReference().addX(this.getPhysicsWidthAsInt()), this.getPositionReference().addXY(this.getPhysicsWidthAsInt(), this.getPhysicsHeightAsInt()), this.getPositionReference().addY(this.getPhysicsHeightAsInt())};
+		final Position[] corners = {futurePos, futurePos.addX(this.getPhysicsWidthAsInt()), futurePos.addXY(this.getPhysicsWidthAsInt(), this.getPhysicsHeightAsInt()), futurePos.addY(this.getPhysicsHeightAsInt())};
 		final ArrayList<Integer> cornersColl = new ArrayList<>();
 		for(int i = 0; i < 4; i++) {
 			if(collider.containsOrOn(corners[i])) {
@@ -370,6 +382,7 @@ public abstract class PhysicsObject extends GameObject {
 
 			if(collider instanceof AABBCollider) {
 				final CollisionInfo collisionInfo = trajectory.intersect(collider);
+
 				if(collisionInfo == null) {
 					System.err.println("Error: collisionInfo is null and shouldn't be.");
 					System.err.println(this);
@@ -468,6 +481,7 @@ public abstract class PhysicsObject extends GameObject {
 	 * @return new boolean
 	 */
 	final protected boolean willCollideWith(final @NotNull Position futurePos, final @NotNull PhysicsObject object) {
+		// TODO: Use the collider of the Physics Object instead of just its position.
 		if(futurePos.getX() > object.getPositionReference().getX() + object.getPhysicsWidthAsInt()) return false;
 		if(object.getPositionReference().getX() > futurePos.getX() + this.getPhysicsWidthAsInt()) return false;
 		if(futurePos.getY() > object.getPositionReference().getY() + object.getPhysicsHeightAsInt()) return false;

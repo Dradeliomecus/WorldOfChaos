@@ -115,7 +115,7 @@ public class Position {
 
 	@Override
 	public String toString() {
-		return "Position: (" + this.getX() + " ; " + this.getY() + ")";
+		return "Position: (" + this.getX() + " ; " + this.getY() + " ; " + this.getZ() +  ")";
 	}
 
 	@Contract(value = "null -> false", pure = true)
@@ -126,6 +126,16 @@ public class Position {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Check if 2 positions have the same coordinates (not considering z axis).
+	 *
+	 * @param pos Position to check this with
+	 * @return new boolean
+	 */
+	final public boolean equalsXY(final @NotNull Position pos) {
+		return this.getX() == ((Position) pos).getX() && this.getY() == ((Position) pos).getY();
 	}
 
 	@Override

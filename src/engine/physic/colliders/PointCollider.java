@@ -31,6 +31,11 @@ public class PointCollider extends Collider {
 		this.position = new Position(x, y);
 	}
 
+	@Override
+	public @NotNull String toString() {
+		return super.toString() + " (" + this.getPosition() + ")";
+	}
+
 	@Contract(pure = true)
 	@Override
 	public @Nullable CollisionInfo intersect(final @NotNull Collider collider) {

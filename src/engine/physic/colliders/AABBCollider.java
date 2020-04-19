@@ -70,6 +70,11 @@ public class AABBCollider extends Collider {
 		this.height = (int)(maxExtents.getY() - minExtents.getY());
 	}
 
+	@Override
+	public @NotNull String toString() {
+		return super.toString() + " (" + this.getPosition() + " ; " + this.getMaxExtents() + ")";
+	}
+
 	@Contract(pure = true)
 	@Override
 	public @Nullable CollisionInfo intersect(final @NotNull Collider collider) {

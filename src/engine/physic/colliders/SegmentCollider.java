@@ -156,7 +156,7 @@ public class SegmentCollider extends Collider {
 				} else {
 					return new CollisionInfo(new SegmentCollider(pts[1], pts[0]), pts[1]);
 				}
-			} else {
+			} else { // intersections.size() == 1
 				final Position[] pts = intersections.toArray(new Position[0]);
 				if(collider.contains(this.getP1())) {
 					return new CollisionInfo(new SegmentCollider(this.getP1(), pts[0]), null);
@@ -195,7 +195,7 @@ public class SegmentCollider extends Collider {
 	@Contract(pure = true)
 	@Override
 	public boolean contains(final @NotNull Position point) {
-		return this.on(point) && !point.equals(this.p1) && !point.equals(this.p2);
+		return this.on(point) && !point.equalsXY(this.p1) && !point.equalsXY(this.p2);
 	}
 
 	@Contract(pure = true)
