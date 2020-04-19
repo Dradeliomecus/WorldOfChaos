@@ -5,6 +5,7 @@ import com.Options;
 import engine.game.components.Camera;
 import engine.game.components.RenderedComponent;
 import engine.math.Vector2f;
+import engine.physic.colliders.AABBCollider;
 import engine.rendering.texture.Animation;
 import engine.rendering.texture.Material;
 import engine.rendering.texture.Texture;
@@ -122,6 +123,11 @@ public class Hero extends Character {
 		}
 
 		super.update(delta);
+	}
+
+	@Override
+	public AABBCollider asCollider() {
+		return this.asAABBCollider();
 	}
 
 	@Override

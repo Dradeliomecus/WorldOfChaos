@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import support.ArrayList;
 
-public class PhysicsObject extends GameObject {
+public abstract class PhysicsObject extends GameObject {
 
 	/**
 	 * Object's velocity/speed (represented as a vector).
@@ -203,6 +203,24 @@ public class PhysicsObject extends GameObject {
 	}
 
 	/**
+	 * Returns a Collider that represents the Physics Object at the time it is called.
+	 * Need to take into account the position, rotation, scale ...
+	 *
+	 * @return new Collider
+	 */
+	public abstract Collider asCollider();
+
+	/**
+	 * Returns an AABBCollider depending on the Position, width ahd height of the Physics Object.
+	 * Might not match the actual Physics Object: see PhysicsObject.asCollider().
+	 *
+	 * @return new AABBCollider
+	 */
+	protected AABBCollider asAABBCollider() {
+		return new AABBCollider(this.getPositionReference(), this.getWidthAsInt(), this.getHeightAsInt());
+	}
+
+	/**
 	 * Called when (this) collides with another object.
 	 * Isn't called for immobile object that collides with an object that moves on them.
 	 *
@@ -278,11 +296,29 @@ public class PhysicsObject extends GameObject {
 		final Vector2f velocity = this.getVelocity().mul((float)(delta * Options.TILE_SIZE * (this.canFly() ? 1 : tileSpeed)));
 		final Position futurePos = this.getPositionReference().addXYAsFloat(velocity);
 
+		int length = this.getPositionReference().distanceToXY(futurePos);
+		final Position posToSet = new Position(futurePos);
+
+		/*final ArrayList<Collider> potentialColliders = new ArrayList<>();
+
+		// Adding all neighbours tiles as potential colliders
+		if(!this.canFly()) {
+			potentialColliders.addAll(Map.getInstance().getTilesOnAsColliders(futurePos, this.getPhysicsWidthAsInt(), this.getPhysicsHeightAsInt(), this.canWalk(), this.canSwim()));
+		}
+
+		// Check with all other Physics Object
+		for(final PhysicsObject object : PhysicsEngine.getObjects()) {
+			if(object == this) {
+				continue;
+			}
+
+			// TODO: Check first if the object isn't too far away. If so, don't add it to the list.
+
+			// TODO: Add function to convert Physics Object to an instance of Collider.
+		}*/
+
 		// Checking collisions with tiles (new).
 		if(!this.canFly()) {
-			int length = this.getPositionReference().distanceToXY(futurePos);
-			final Position posToSet = new Position(futurePos);
-
 			for(final AABBCollider tileCollider : Map.getInstance().getTilesOnAsColliders(futurePos, this.getPhysicsWidthAsInt(), this.getPhysicsHeightAsInt(), this.canWalk(), this.canSwim())) {
 				final Position colPos = this.handleCollision(futurePos, tileCollider);
 
@@ -293,11 +329,6 @@ public class PhysicsObject extends GameObject {
 			}
 
 			futurePos.set(posToSet);
-		}
-
-		// TODO: same interactions but with other physics objects.
-		for(final PhysicsObject object : PhysicsEngine.getObjects()) {
-			
 		}
 
 		this.setPosition(futurePos.asVector2f());

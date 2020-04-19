@@ -8,6 +8,7 @@ import engine.math.Vector2f;
 import engine.physic.CollisionBehaviour;
 import engine.physic.MovementsAllowed;
 import engine.physic.PhysicsObject;
+import engine.physic.colliders.CircleCollider;
 import engine.rendering.texture.Material;
 import engine.rendering.texture.Texture;
 import org.jetbrains.annotations.NotNull;
@@ -36,6 +37,11 @@ public class TestFireBall extends PhysicsObject {
 		audio.setVolume(0.5f);
 		this.addAudioObject(audio);
 		audio.play();
+	}
+
+	@Override
+	public CircleCollider asCollider() {
+		return new CircleCollider(this.getPositionReference().addXY(Options.TILE_SIZE_POS/2, Options.TILE_SIZE_POS/2), (int)(Options.TILE_SIZE_POS/2));
 	}
 
 	@Override

@@ -6,6 +6,7 @@ import engine.math.Vector2f;
 import engine.physic.CollisionBehaviour;
 import engine.physic.MovementsAllowed;
 import engine.physic.PhysicsObject;
+import engine.physic.colliders.AABBCollider;
 import engine.rendering.texture.Material;
 import engine.rendering.texture.Texture;
 
@@ -27,6 +28,11 @@ public class TestTree extends PhysicsObject {
 
 		final RenderedComponent renderedComponent = new RenderedComponent(TestTree.MATERIAL, Options.TILE_SIZE, Options.TILE_SIZE * 2);
 		this.addComponent(renderedComponent);
+	}
+
+	@Override
+	public AABBCollider asCollider() {
+		return this.asAABBCollider();
 	}
 
 	@Override
