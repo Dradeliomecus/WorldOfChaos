@@ -44,48 +44,50 @@ public class SegmentCollider extends Collider {
 	@Contract(pure = true)
 	@Override
 	public @Nullable CollisionInfo intersect(final @NotNull Collider collider) {
+		// Equation for this: ax + by + c = 0
+		final long a = this.p1.getY() - this.p2.getY();
+		final long b = this.p2.getX() - this.p1.getX();
+		final long c = this.p1.getX()*this.p2.getY() - this.p2.getX()*this.p1.getY();
+		final long xMin = Math.min(this.getP1().getX(), this.getP2().getX());
+		final long xMax = Math.max(this.getP1().getX(), this.getP2().getX());
+		final long yMin = Math.min(this.getP1().getY(), this.getP2().getY());
+		final long yMax = Math.max(this.getP1().getY(), this.getP2().getY());
+
 		if(collider instanceof PointCollider) {
 			return collider.intersect(this);
 		} else if(collider instanceof SegmentCollider) {
 			final SegmentCollider line = (SegmentCollider) collider;
 			// Line equation : ax + by + c = 0
-			final long a1 = this.p1.getY() - this.p2.getY();
-			final long b1 = this.p2.getX() - this.p1.getX();
-			final long c1 = this.p1.getX()*this.p2.getY() - this.p2.getX()*this.p1.getY();
 			final long a2 = line.p1.getY() - line.p2.getY();
 			final long b2 = line.p2.getX() - line.p1.getX();
 			final long c2 = line.p1.getX()*line.p2.getY() - line.p2.getX()*line.p1.getY();
-			final double det = a1*b2 - a2*b1;
+			final double det = a*b2 - a2*b;
 
 			if(det == 0) { // Both lines are parallel.
-				final double factor = a1 == 0 ? (double)b1/(double)b2 : (double)a1/(double)a2;
-				if(Math.abs(c2 * factor - c1) >= 1) return null;
+				final double factor = a == 0 ? (double)b/(double)b2 : (double)a/(double)a2;
+				if(Math.abs(c2 * factor - c) >= 1) return null;
 
-				if(a1 != 0) {
-					final long ymin1 = Math.min(this.getP1().getY(), this.getP2().getY());
-					final long ymax1 = Math.max(this.getP1().getY(), this.getP2().getY());
-					final long ymin2 = Math.min(line.getP1().getY(), line.getP2().getY());
-					final long ymax2 = Math.max(line.getP1().getY(), line.getP2().getY());
+				if(a != 0) {
+					final long yMin2 = Math.min(line.getP1().getY(), line.getP2().getY());
+					final long yMax2 = Math.max(line.getP1().getY(), line.getP2().getY());
 
-					if(ymin1 >= ymax2 || ymax1 <= ymin2) return null;
-					return new CollisionInfo(new SegmentCollider(new Position(this.getP1().getX(), Math.max(ymin1, ymin2)), new Position(this.getP1().getX(), Math.min(ymax1, ymax2))), null);
+					if(yMin >= yMax2 || yMax <= yMin2) return null;
+					return new CollisionInfo(new SegmentCollider(new Position(this.getP1().getX(), Math.max(yMin, yMin2)), new Position(this.getP1().getX(), Math.min(yMax, yMax2))), null);
 				} else {
-					final long xmin1 = Math.min(this.getP1().getX(), this.getP2().getX());
-					final long xmax1 = Math.max(this.getP1().getX(), this.getP2().getX());
-					final long xmin2 = Math.min(line.getP1().getX(), line.getP2().getX());
-					final long xmax2 = Math.max(line.getP1().getX(), line.getP2().getX());
+					final long xMin2 = Math.min(line.getP1().getX(), line.getP2().getX());
+					final long xMax2 = Math.max(line.getP1().getX(), line.getP2().getX());
 
-					if(xmin1 >= xmax2 || xmax1 <= xmin2) return null;
+					if(xMin >= xMax2 || xMax <= xMin2) return null;
 
-					final long x1 = Math.max(xmin1, xmin2);
-					final long y1 = -(a1*x1 + c1)/b1;
-					final long x2 = Math.min(xmax1, xmax2);
-					final long y2 = -(a1*x2 + c1)/b1;
+					final long x1 = Math.max(xMin, xMin2);
+					final long y1 = -(a*x1 + c)/b;
+					final long x2 = Math.min(xMax, xMax2);
+					final long y2 = -(a*x2 + c)/b;
 					return new CollisionInfo(new SegmentCollider(new Position(x1, y1), new Position(x2, y2)), null);
 				}
 			} else {
-				final int x = (int) Math.round((double)(b1*c2 - b2*c1)/det);
-				final int y = (int) Math.round((double)(a2*c1 - a1*c2)/det);
+				final int x = (int) Math.round((double)(b*c2 - b2*c)/det);
+				final int y = (int) Math.round((double)(a2*c - a*c2)/det);
 				final Position result = new Position(x, y);
 
 				if(this.contains(result) && line.contains(result)) {
@@ -95,80 +97,72 @@ public class SegmentCollider extends Collider {
 				}
 			}
 		} else if(collider instanceof AABBCollider) {
-			if(collider.contains(this.getP1()) && collider.contains(this.getP2())) {
-				return new CollisionInfo(new SegmentCollider(this.getP1(), this.getP2()), null);
-			}
+			final Position minExtents = ((AABBCollider) collider).getPosition();
+			final Position maxExtents = ((AABBCollider) collider).getMaxExtents();
 
-			final HashSet<Position> intersections = new HashSet<>();
+			if(a == 0) { // Then we have y = -c/b
+				final long y = -Math.round((double) c / b);
 
-			for(final SegmentCollider line : ((AABBCollider) collider).asLines()) {
-				final CollisionInfo collision = this.intersect(line);
-				if(collision == null) {
-					continue;
-				}
-
-				if(collision.getCollisionArea() instanceof PointCollider) {
-					intersections.add(((PointCollider) collision.getCollisionArea()).getPosition());
-				} else if(collision.getCollisionArea() instanceof SegmentCollider) {
-					intersections.add(((SegmentCollider) collision.getCollisionArea()).getP1());
-					intersections.add(((SegmentCollider) collision.getCollisionArea()).getP2());
-				} else {
-					System.err.println("Error: Don't know how to handle that");
-					System.err.println(collision.getCollisionArea());
+				if(y <= minExtents.getY() || y >= maxExtents.getY()) {
 					return null;
 				}
-			}
 
-			if(intersections.size() > 2) {
-				System.err.println("Error: Line intersect at more than 2 different points with AABB Collider.");
-				System.err.println("Segment: " + this + " ; [" + this.getP1() + ";" + this.getP2() + "]");
-				System.err.println("AABB Collider: " + collider);
-				System.err.println("\tMin extents: " + ((AABBCollider) collider).getPosition());
-				System.err.println("\tMax extents: " + ((AABBCollider) collider).getMaxExtents());
-				System.err.println("Collisions found:");
-				for(final Position pt : intersections) {
-					System.err.println("\t- " + pt);
-				}
-				System.err.println("Returning null...");
-				return null;
-			} else if(intersections.size() == 0) { // No collision or line going through a corner.
-				if(collider.contains(this.getP1())) {
-					final Position[] corners = ((AABBCollider) collider).getCorners();
-					for(final Position corner : corners) {
-						if(this.containsOrOn(corner)) {
-							return new CollisionInfo(new SegmentCollider(this.getP1(), corner), null);
-						}
-					}
-				} else if(collider.contains(this.getP2())) {
-					final Position[] corners = ((AABBCollider) collider).getCorners();
-					for(final Position corner : corners) {
-						if(this.containsOrOn(corner)) {
-							return new CollisionInfo(new SegmentCollider(corner, this.getP2()), corner);
-						}
-					}
+				final long x1 = Math.max(xMin, minExtents.getX());
+				final long x2 = Math.min(xMax, maxExtents.getX());
+
+				if(x1 == x2) {
+					return null;
 				}
 
-				return null;
-			} else if(intersections.size() == 2) {
-				final Position[] pts = intersections.toArray(new Position[0]);
-				if(pts[0].distanceToXY(this.getP1()) < pts[1].distanceToXY(this.getP1())) {
-					return new CollisionInfo(new SegmentCollider(pts[0], pts[1]), pts[0]);
-				} else {
-					return new CollisionInfo(new SegmentCollider(pts[1], pts[0]), pts[1]);
+				final Position pointCollider = this.getP1().getX() < this.getP2().getX() ? new Position(x1, y) : new Position(x2, y);
+				return new CollisionInfo(new SegmentCollider(new Position(x1, y), new Position(x2, y)), pointCollider);
+			} else if(b == 0) { // Then we have x = -c/a
+				final long x = -Math.round((double) c / a);
+
+				if(x <= minExtents.getX() || x >= maxExtents.getX()) {
+					return null;
 				}
-			} else { // intersections.size() == 1
-				final Position[] pts = intersections.toArray(new Position[0]);
-				if(collider.contains(this.getP1())) {
-					return new CollisionInfo(new SegmentCollider(this.getP1(), pts[0]), null);
+
+				final long y1 = Math.max(yMin, minExtents.getY());
+				final long y2 = Math.min(yMax, maxExtents.getY());
+
+				if(y1 == y2) {
+					return null;
+				}
+
+				final Position pointCollider = this.getP1().getY() < this.getP2().getY() ? new Position(x, y1) : new Position(x, y2);
+				return new CollisionInfo(new SegmentCollider(new Position(x, y1), new Position(x, y2)), pointCollider);
+			} else {
+				long x1 = Math.min(Math.max(-Math.round((double)(b * minExtents.getY() + c) / a), minExtents.getX()), maxExtents.getX());
+				long x2 = Math.max(Math.min(-Math.round((double)(b * maxExtents.getY() + c) / a), maxExtents.getX()), minExtents.getX());
+
+				if(x1 > x2) { // We want x1 < x2
+					final long x3 = x1;
+					x1 = x2;
+					x2 = x3;
+				}
+
+				if(this.getP1().getX() > x1 && this.getP2().getX() > x1) {
+					x1 = xMin;
+				}
+				if(this.getP1().getX() < x2 && this.getP2().getX() < x2) {
+					x2 = xMax;
+				}
+
+				final long y1 = -Math.round((double)(a*x1 + c) / b);
+				final long y2 = -Math.round((double)(a*x2 + c) / b);
+
+				if(x1 > x2) {
+					return null;
+				} else if(x1 == x2) { // The segment intersects with a corner.
+					return null;
 				} else {
-					return new CollisionInfo(new SegmentCollider(pts[0], this.getP2()), pts[0]);
+					final Position collisionPoint = this.getP1().getX() < this.getP2().getX() ? new Position(x1, y1) : new Position(x2, y2);
+					return new CollisionInfo(new SegmentCollider(new Position(x1, y1), new Position(x2, y2)), collisionPoint);
 				}
 			}
 		} else if(collider instanceof CircleCollider) {
-			// Line equation : ax + by + c = 0 ; Circle equation : (x-p)² + (y-q)² = r²
-			final long a = this.p1.getY() - this.p2.getY();
-			final long b = this.p2.getX() - this.p1.getX();
-			final long c = this.p1.getX()*this.p2.getY() - this.p2.getX()*this.p1.getY();
+			// Circle equation : (x-p)² + (y-q)² = r²
 			final long p = ((CircleCollider) collider).getCenter().getX();
 			final long q = ((CircleCollider) collider).getCenter().getY();
 			final long r = ((CircleCollider) collider).getRadius();

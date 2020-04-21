@@ -354,7 +354,7 @@ public abstract class PhysicsObject extends GameObject {
 	 */
 	private @NotNull Position handleCollision(final @NotNull Position futurePos, final @NotNull Collider collider) { // TODO: Also take in rotation and scale ...
 		// First we need to know which corner(s) of (this) is the problem.
-		// TODO: Does this corner system work with all colliders?
+		// TODO: Corner system doesn't work.
 		final Position[] previousCorners = {this.getPositionReference(), this.getPositionReference().addX(this.getPhysicsWidthAsInt()), this.getPositionReference().addXY(this.getPhysicsWidthAsInt(), this.getPhysicsHeightAsInt()), this.getPositionReference().addY(this.getPhysicsHeightAsInt())};
 		final Position[] corners = {futurePos, futurePos.addX(this.getPhysicsWidthAsInt()), futurePos.addXY(this.getPhysicsWidthAsInt(), this.getPhysicsHeightAsInt()), futurePos.addY(this.getPhysicsHeightAsInt())};
 		final ArrayList<Integer> cornersColl = new ArrayList<>();
@@ -383,12 +383,8 @@ public abstract class PhysicsObject extends GameObject {
 			if(collider instanceof AABBCollider) {
 				final CollisionInfo collisionInfo = trajectory.intersect(collider);
 
-				if(collisionInfo == null) {
-					System.err.println("Error: collisionInfo is null and shouldn't be.");
-					System.err.println(this);
-					System.err.println(collider);
-					new Exception().printStackTrace();
-					return posToSet;
+				if(collisionInfo == null) { // False alarm. Usually because 2 values are exactly equal.
+					continue;
 				}
 
 				final Position pointOfCollision = collisionInfo.getCollisionPoint();
