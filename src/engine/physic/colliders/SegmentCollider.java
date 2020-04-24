@@ -5,8 +5,6 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashSet;
-
 public class SegmentCollider extends Collider {
 
 	/**
@@ -52,6 +50,7 @@ public class SegmentCollider extends Collider {
 		final long xMax = Math.max(this.getP1().getX(), this.getP2().getX());
 		final long yMin = Math.min(this.getP1().getY(), this.getP2().getY());
 		final long yMax = Math.max(this.getP1().getY(), this.getP2().getY());
+		final boolean leftToRight = this.getP1().getX() < this.getP2().getX();
 
 		if(collider instanceof PointCollider) {
 			return collider.intersect(this);
@@ -114,7 +113,7 @@ public class SegmentCollider extends Collider {
 					return null;
 				}
 
-				final Position pointCollider = this.getP1().getX() < this.getP2().getX() ? new Position(x1, y) : new Position(x2, y);
+				final Position pointCollider = leftToRight ? new Position(x1, y) : new Position(x2, y);
 				return new CollisionInfo(new SegmentCollider(new Position(x1, y), new Position(x2, y)), pointCollider);
 			} else if(b == 0) { // Then we have x = -c/a
 				final long x = -Math.round((double) c / a);
@@ -130,7 +129,7 @@ public class SegmentCollider extends Collider {
 					return null;
 				}
 
-				final Position pointCollider = this.getP1().getY() < this.getP2().getY() ? new Position(x, y1) : new Position(x, y2);
+				final Position pointCollider = leftToRight ? new Position(x, y1) : new Position(x, y2);
 				return new CollisionInfo(new SegmentCollider(new Position(x, y1), new Position(x, y2)), pointCollider);
 			} else {
 				long x1 = Math.min(Math.max(-Math.round((double)(b * minExtents.getY() + c) / a), minExtents.getX()), maxExtents.getX());
@@ -157,7 +156,7 @@ public class SegmentCollider extends Collider {
 				} else if(x1 == x2) { // The segment intersects with a corner.
 					return null;
 				} else {
-					final Position collisionPoint = this.getP1().getX() < this.getP2().getX() ? new Position(x1, y1) : new Position(x2, y2);
+					final Position collisionPoint = leftToRight ? new Position(x1, y1) : new Position(x2, y2);
 					return new CollisionInfo(new SegmentCollider(new Position(x1, y1), new Position(x2, y2)), collisionPoint);
 				}
 			}
@@ -167,12 +166,71 @@ public class SegmentCollider extends Collider {
 			final long q = ((CircleCollider) collider).getCenter().getY();
 			final long r = ((CircleCollider) collider).getRadius();
 
-			if(b == 0) {
-				if(b <= p-r || b >= p+r) return null; // TODO: This doesn't seem correct.
-				// x = b ==> (y-q)² = r² - (b-p)²
-				final long k = Math.round(Math.sqrt(r*r - (b-p)*(b-p)));
-				final SegmentCollider collision = new SegmentCollider(new Position(b, q-k), new Position(b, q+k));
-				// TODO: Finish.
+			if(a == 0) { // Then we have y = -b/a
+				final long y = -Math.round((double) c / b);
+
+				if(y <= q-r || y >= q+r) { // No collision.
+					return null;
+				}
+
+				final long x1 = Math.max(p-r, leftToRight ? this.getP1().getX() : this.getP2().getX());
+				final long x2 = Math.min(p+r, leftToRight ? this.getP2().getX() : this.getP1().getX());
+
+				if(x1 >= x2) { // No collision with the circle (but if the segment was infinite, there would be).
+					return null;
+				}
+
+				final Position collisionPoint = leftToRight ? new Position(x1, y) : new Position(x2, y);
+				return new CollisionInfo(new SegmentCollider(new Position(x1, y), new Position(x2, y)), collisionPoint);
+			} else if(b == 0) { // Then we have x = -c/a
+				final long x = -Math.round((double) c / a);
+
+				if(x <= p-r || x >= p+r) { // No collision.
+					return null;
+				}
+
+				final long y1 = Math.max(q-r, Math.min(this.getP1().getY(), this.getP2().getY()));
+				final long y2 = Math.min(q+r, Math.max(this.getP1().getY(), this.getP2().getY()));
+
+				if(y1 >= y2) { // No collision with the circle (but if the segment was infinite, there would be).
+					return null;
+				}
+
+				final Position collisionPoint = this.getP1().getY() < this.getP2().getY() ? new Position(x, y1) : new Position(x, y2);
+				return new CollisionInfo(new SegmentCollider(new Position(x, y1), new Position(x, y2)), collisionPoint);
+			} else {
+				// (x-p)² + ((ax+c)/b + q)² = r²
+				// Then, we have an equation with Ax² + Bx + C = 0.
+				final double A = 1 + (double)(a*a) / (double)(b*b);
+				final double B = (double)(2*a*c)/(double)(b*b) + (double)(2*a*q)/(double)(b) - 2*p;
+				final double C = p*p + q*q - r*r + (double)(2*c*q)/(double)(b) + (double)(c*c)/(double)(b*b);
+				final double d = B*B - 4*A*C;
+
+				if(Math.round(d) <= 0) { // No collision even if the segment was infinite.
+					return null;
+				}
+
+				final double D = Math.sqrt(d);
+
+				long x1 = Math.round((-B - D * (A>0 ? 1 : -1)) / (2*A));
+				long x2 = Math.round((-B + D * (A>0 ? 1 : -1)) / (2*A));
+
+				if(x1 < xMin) {
+					x1 = xMin;
+				}
+				if(x2 > xMax) {
+					x2 = xMax;
+				}
+
+				if(x2 <= x1) { // No collision (but if the segment was infinite, there would be).
+					return null;
+				}
+
+				final long y1 = -Math.round((double)(a*x1 + c) / b);
+				final long y2 = -Math.round((double)(a*x2 + c) / b);
+
+				final Position collisionPoint = leftToRight ? new Position(x1, y1) : new Position(x2, y2);
+				return new CollisionInfo(new SegmentCollider(new Position(x1, y1), new Position(x2, y2)), collisionPoint);
 			}
 
 			System.err.print("Error: Collision between SegmentCollider and CircleCollider not implemented yet.");
