@@ -2,7 +2,6 @@ package engine.audio;
 
 import com.GameOptions;
 import com.objects.characters.Hero;
-import engine.math.Vector2f;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.openal.AL;
 

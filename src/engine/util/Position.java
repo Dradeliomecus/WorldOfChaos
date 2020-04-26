@@ -135,7 +135,7 @@ public class Position {
 	 * @return new boolean
 	 */
 	final public boolean equalsXY(final @NotNull Position pos) {
-		return this.getX() == ((Position) pos).getX() && this.getY() == ((Position) pos).getY();
+		return this.getX() == pos.getX() && this.getY() == pos.getY();
 	}
 
 	@Override

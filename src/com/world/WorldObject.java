@@ -4,11 +4,9 @@ import com.Game;
 import com.objects.characters.Hero;
 import com.world.hud.HUD;
 import com.world.map.MainMap;
-import engine.game.components.Camera;
 import engine.game.objects.GameObject;
 import engine.game.objects.map.Map;
 import engine.math.Vector2f;
-import engine.physic.PhysicsEngine;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 

@@ -10,7 +10,6 @@ import engine.rendering.texture.Texture;
 import engine.util.Color;
 import engine.util.Window;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;

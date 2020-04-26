@@ -24,6 +24,8 @@ package support.json;
  SOFTWARE.
  */
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -132,7 +134,8 @@ public class JSONObject {
          *
          * @return The string "null".
          */
-        public String toString() {
+        @Contract(pure = true)
+        public @NotNull String toString() {
             return "null";
         }
     }
@@ -165,7 +168,7 @@ public class JSONObject {
      * @param jo A JSONObject.
      * @param names An array of strings.
      */
-    public JSONObject(final JSONObject jo, final String[] names) {
+    public JSONObject(final @NotNull JSONObject jo, final @NotNull String[] names) {
         this();
         for (final String name : names) {
             try {
@@ -283,7 +286,7 @@ public class JSONObject {
      *            An array of strings, the names of the fields to be obtained
      *            from the object.
      */
-    public JSONObject(final Object object, final String names[]) {
+    public JSONObject(final Object object, final String[] names) {
         this();
         final Class<?> c = object.getClass();
         for (final String name : names) {

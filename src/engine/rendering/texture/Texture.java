@@ -315,7 +315,7 @@ final public class Texture extends Image {
 		final int width = img.getWidth();
 		final int height = img.getHeight();
 
-		final int pixels[] = img.getRGB(0, 0, width, height, null, 0, width);
+		final int[] pixels = img.getRGB(0, 0, width, height, null, 0, width);
 
 		return Texture.generateTexture(width, height, hasAlpha, pixels);
 	}

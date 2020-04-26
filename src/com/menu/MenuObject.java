@@ -13,7 +13,6 @@ import engine.game.components.RenderedComponent;
 import engine.game.objects.GameObject;
 import engine.game.objects.button.Button;
 import engine.math.Vector2f;
-import engine.rendering.shader.Shader;
 import engine.rendering.texture.Animation;
 import engine.rendering.texture.Material;
 import engine.rendering.texture.Texture;

@@ -38,7 +38,7 @@ public class AudioObject {
 	/**
 	 * ID of the source (where the sound is emitted).
 	 */
-	private int source;
+	final private int source;
 
 	/**
 	 * Creates a new AudioObject instance.

@@ -63,7 +63,7 @@ final public class BufferUtil {
 	 * @param matrix Matrix4f to put in the buffer
 	 * @return Flipped FloatBuffer with correct data
 	 */
-	public static FloatBuffer createFlippedBuffer(final Matrix4f matrix) {
+	public static @NotNull FloatBuffer createFlippedBuffer(final Matrix4f matrix) {
 		final FloatBuffer buffer = createFloatBuffer(16);
 
 		for(int i = 0; i < 4; i++) {
@@ -86,7 +86,7 @@ final public class BufferUtil {
 	 * @param pixels Image pixels
 	 * @return Flipped ByteBuffer with correct data
 	 */
-	public static ByteBuffer createFlippedBuffer(final int width, final int height, final boolean hasAlpha, final int[] pixels) {
+	public static @NotNull ByteBuffer createFlippedBuffer(final int width, final int height, final boolean hasAlpha, final int[] pixels) {
 		final ByteBuffer buffer = BufferUtil.createByteBuffer(width * height * 4);
 
 		for(int i = 0; i < height; i++) {
@@ -115,7 +115,7 @@ final public class BufferUtil {
 	 * @param filename Image filename
 	 * @return Flipped ByteBuffer with correct data
 	 */
-	public static ByteBuffer createFlippedBuffer(final String filename) {
+	public static @NotNull ByteBuffer createFlippedBuffer(final String filename) {
 		final BufferedImage img = support.File.getImage(filename);
 		if(img == null) {
 			System.out.println(filename);
@@ -126,7 +126,7 @@ final public class BufferUtil {
 		final int width = img.getWidth();
 		final int height = img.getHeight();
 
-		final int pixels[] = img.getRGB(0, 0, width, height, null, 0, width);
+		final int[] pixels = img.getRGB(0, 0, width, height, null, 0, width);
 
 		return BufferUtil.createFlippedBuffer(width, height, hasAlpha, pixels);
 	}

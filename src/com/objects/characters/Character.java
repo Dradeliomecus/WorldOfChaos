@@ -1,6 +1,5 @@
 package com.objects.characters;
 
-import com.attributes.Attribute;
 import engine.physic.CollisionBehaviour;
 import engine.physic.MovementsAllowed;
 import engine.physic.PhysicsObject;

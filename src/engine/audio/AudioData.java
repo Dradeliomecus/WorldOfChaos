@@ -166,7 +166,7 @@ class AudioData {
 	}
 
 	/**
-	 * I have no idea what this function does, copy paste from WaveData in neawest lwjgl version.
+	 * I have no idea what this function does, copy paste from WaveData in newest lwjgl version.
 	 *
 	 * @param audio_bytes Audio bytes read from input
 	 * @param two_bytes_data True = stereo

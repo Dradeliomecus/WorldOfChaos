@@ -3,7 +3,6 @@ package com.world.hud.status;
 import com.objects.characters.Hero;
 import engine.game.components.RenderedComponent;
 import engine.game.objects.GameObject;
-import engine.math.Vector2f;
 import engine.rendering.texture.Material;
 import engine.rendering.texture.Texture;
 import org.jetbrains.annotations.Contract;

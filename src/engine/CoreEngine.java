@@ -227,9 +227,9 @@ final public class CoreEngine {
 		this.game.render(this.renderingEngine);
 		Profiler.stopProfileTimer("Render");
 
-		Profiler.startProfileTimer("WindowSynch");
+		Profiler.startProfileTimer("WindowSync");
 		Window.render();
-		Profiler.stopProfileTimer("WindowSynch");
+		Profiler.stopProfileTimer("WindowSync");
 	}
 
 	/**
