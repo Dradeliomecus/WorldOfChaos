@@ -232,11 +232,6 @@ public class SegmentCollider extends Collider {
 				final Position collisionPoint = leftToRight ? new Position(x1, y1) : new Position(x2, y2);
 				return new CollisionInfo(new SegmentCollider(new Position(x1, y1), new Position(x2, y2)), collisionPoint);
 			}
-
-			System.err.print("Error: Collision between SegmentCollider and CircleCollider not implemented yet.");
-			new Exception().printStackTrace();
-
-			return null;
 		} else {
 			System.err.println("Error: Collision between SegmentCollider and " + collider + " isn't implemented yet.");
 			new Exception().printStackTrace();
