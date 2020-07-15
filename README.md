@@ -10,7 +10,7 @@ In order to configure the libraries with IntelliJ IDEA:
 
 Then, to link the dll:
 - Go in the "Edit Configurations" for the compiler
-- Under VM options, put: "-Djava.library.path=lib/"
+- Under VM options, put: "-Djava.library.path=lib/{your_os}"
 
 To configure the annotations:
 - Go to the Project Structure (Ctrl+Shift+Alt+S)
