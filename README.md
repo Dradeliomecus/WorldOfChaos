@@ -11,3 +11,8 @@ In order to configure the libraries with IntelliJ IDEA:
 Then, to link the dll:
 - Go in the "Edit Configurations" for the compiler
 - Under VM options, put: "-Djava.library.path=lib/"
+
+To configure the annotations:
+- Go to the Project Structure (Ctrl+Shift+Alt+S)
+- Under "Project Settings", select Libraries
+- Click add --> from Maven --> type in "org.jetbrains:annotations:16.0.2"
