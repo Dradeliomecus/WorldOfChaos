@@ -1,10 +1,13 @@
 package engine.util;
 
 import engine.math.Vector2f;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.LWJGLException;
+import org.lwjgl.opengl.ContextAttribs;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.opengl.PixelFormat;
 
 import java.nio.ByteBuffer;
 
@@ -20,12 +23,13 @@ final public class Window {
 	 * @param width Window's width (in px)
 	 * @param height Window's height (in px)
 	 * @param title Window's title (in px)
+	 * @param contextAttribs Context Attributes (for openGl version)
 	 */
-	public static void create(final int width, final int height, final @NotNull String title) {
+	public static void create(final int width, final int height, final @NotNull String title, final ContextAttribs contextAttribs) {
 		try {
 			Display.setDisplayMode(new DisplayMode(width, height));
 			Display.setTitle(title);
-			Display.create();
+			Display.create(new PixelFormat(), contextAttribs);
 		} catch(final LWJGLException e) {
 			e.printStackTrace();
 			System.exit(1);
@@ -105,8 +109,9 @@ final public class Window {
 	 *
 	 * @return new Vector2f
 	 */
-	public static Vector2f getCenter() {
-		return new Vector2f(Window.getWidth() / 2, Window.getHeight() / 2);
+	@Contract(" -> new")
+	public static @NotNull Vector2f getCenter() {
+		return new Vector2f(Window.getWidth() / 2.0f, Window.getHeight() / 2.0f);
 	}
 
 	/**

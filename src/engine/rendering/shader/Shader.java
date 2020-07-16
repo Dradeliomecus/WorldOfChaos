@@ -123,6 +123,7 @@ public class Shader {
 
 		if(glGetShader(shader, GL_COMPILE_STATUS) == 0) {
 			System.err.println(glGetShaderInfoLog(shader, 1024));
+			new Exception().printStackTrace();
 			System.exit(1);
 		}
 

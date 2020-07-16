@@ -13,10 +13,13 @@ import engine.util.Window;
 import engine.util.profiling.Profiler;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.lwjgl.opengl.ContextAttribs;
 
 import java.util.ArrayList;
 
+import static org.lwjgl.opengl.GL11.GL_VERSION;
 import static org.lwjgl.opengl.GL11.glDeleteTextures;
+import static org.lwjgl.opengl.GL11.glGetString;
 import static org.lwjgl.opengl.GL30.glDeleteFramebuffers;
 
 final public class CoreEngine {
@@ -25,6 +28,11 @@ final public class CoreEngine {
 	 * Is the Engine running right now.
 	 */
 	private boolean isRunning;
+
+	/**
+	 * Context Attributes for OpenGL version.
+	 */
+	final private ContextAttribs contextAttribs;
 
 	/**
 	 * Application's game.
@@ -49,7 +57,11 @@ final public class CoreEngine {
 	public CoreEngine(final @NotNull CoreGame game) {
 		this.isRunning = false;
 
-		this.createWindow(Options.WINDOW_WIDTH, Options.WINDOW_HEIGHT, Options.WINDOW_TITLE);
+		this.contextAttribs = new ContextAttribs(3, 3).withForwardCompatible(true);
+		this.createWindow(Options.WINDOW_WIDTH, Options.WINDOW_HEIGHT, Options.WINDOW_TITLE, this.contextAttribs);
+
+		if(Options.DEBUG)
+			this.outputVersions();
 
 		this.renderingEngine = new RenderingEngine();
 		game.setRenderingEngine(this.renderingEngine);
@@ -58,7 +70,18 @@ final public class CoreEngine {
 
 		this.game = game.init(this);
 
-		if(Options.DEBUG) System.out.println("CoreEngine has been initialized.");
+		if(Options.DEBUG)
+			System.out.println("CoreEngine has been initialized.");
+	}
+
+	/**
+	 * Checks that everything is all right with the openGL version.
+	 */
+	private void outputVersions() {
+		System.out.println("\n" + this.contextAttribs.toString());
+		System.out.println("- OS: " + System.getProperty("os.name") + " v" + System.getProperty("os.version"));
+		System.out.println("- LWJGL v" + org.lwjgl.Sys.getVersion());
+		System.out.println("- OpenGL v" + glGetString(GL_VERSION) + "\n");
 	}
 
 	/**
@@ -90,8 +113,7 @@ final public class CoreEngine {
 		long lastFrameTime = Time.getNanoTime(); // When did the last frame start
 		double unprocessedTime = 0.0; // How many time do I still need to update the game
 
-		if(Options.DEBUG) System.out.println("CoreEngine is running. It took " + (Time.getNanoTime() - MainComponent.APPLICATION_START) * Time.NANO_TO_MILLI + "ms to get here.");
-		if(Options.DEBUG) System.out.println("OpenGL version: " + RenderingEngine.getOpenGLVersion());
+		if(Options.DEBUG) System.out.println("CoreEngine is running. It took " + (Time.getNanoTime() - MainComponent.APPLICATION_START) * Time.NANO_TO_MILLI + "ms to get here.\n");
 
 		while(this.isRunning) {
 			final double frameTime = 1.0 / Options.MAX_FRAMES_PER_SECOND.get(); // How long should a frame take
@@ -258,9 +280,10 @@ final public class CoreEngine {
 	 * @param width Window's width (in px)
 	 * @param height Window's height (in px)
 	 * @param title Window title
+	 * @param contextAttribs Context Attributes (for openGL version)
 	 */
-	private void createWindow(final int width, final int height, final String title) {
-		Window.create(width, height, title);
+	private void createWindow(final int width, final int height, final @NotNull String title, final ContextAttribs contextAttribs) {
+		Window.create(width, height, title, contextAttribs);
 	}
 
 }
