@@ -1,9 +1,9 @@
-#version 120
+#version 330
 
-attribute vec2 position;
-attribute vec2 textCoord;
+in vec2 position;
+in vec2 textCoord;
 
-varying vec2 textCoord0;
+out vec2 textCoord0;
 
 uniform mat4 transform;
 

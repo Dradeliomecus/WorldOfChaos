@@ -169,7 +169,7 @@ public class Shader {
 					this.setUniform("transformProjected", projection.mul(transform.getTransformedTransformation()));
 					break;
 				case "materialColor" :
-					this.setUniform("materialColor", material.getColor());
+					//this.setUniform("materialColor", material.getColor());
 					break;
 			}
 		}
