@@ -58,11 +58,36 @@ public class Shader {
 		this.addAllUniforms();
 	}
 
+	@Override
+	final protected void finalize() {
+		try {
+			super.finalize();
+		} catch(final Throwable e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+
+		// TODO
+		//glDetachShader(this.program, vsId);
+		//glDetachShader(this.program, fsId);
+
+		//glDeleteShader(vsId);
+		//glDeleteShader(fsId);
+		glDeleteProgram(this.program);
+	}
+
 	/**
 	 * Binds the Shader's program to tell OpenGL to use it.
 	 */
 	final public void bind() {
 		glUseProgram(this.program);
+	}
+
+	/**
+	 * Unbinds the current shader.
+	 */
+	public static void unbind() {
+		glUseProgram(0);
 	}
 
 	/**
@@ -94,7 +119,7 @@ public class Shader {
 	}
 
 	/**
-	 * Adds a Vertex Shader to the Shader's program.
+	 * Adds a Geometry Shader to the Shader's program.
 	 *
 	 * @param text Vertex shader's content
 	 */
@@ -108,7 +133,6 @@ public class Shader {
 	 * @param text Code/content to add
 	 * @param type Shader's type (vertex, fragment, geometry)
 	 */
-	@SuppressWarnings("deprecation")
 	private void addToProgram(final String text, final int type) {
 		final int shader = glCreateShader(type);
 
@@ -121,7 +145,7 @@ public class Shader {
 		glShaderSource(shader, text);
 		glCompileShader(shader);
 
-		if(glGetShader(shader, GL_COMPILE_STATUS) == 0) {
+		if(glGetShaderi(shader, GL_COMPILE_STATUS) == 0) {
 			System.err.println(glGetShaderInfoLog(shader, 1024));
 			new Exception().printStackTrace();
 			System.exit(1);
@@ -133,18 +157,17 @@ public class Shader {
 	/**
 	 * Compiles the Shader.
 	 */
-	@SuppressWarnings("deprecation")
 	final public void compile() {
 		glLinkProgram(this.program);
 
-		if(glGetProgram(this.program, GL_LINK_STATUS) == 0) {
+		if(glGetProgrami(this.program, GL_LINK_STATUS) == 0) {
 			System.err.println(glGetProgramInfoLog(this.program, 1024));
 			System.exit(1);
 		}
 
 		glValidateProgram(this.program);
 
-		if(glGetProgram(this.program, GL_VALIDATE_STATUS) == 0) {
+		if(glGetProgrami(this.program, GL_VALIDATE_STATUS) == 0) {
 			System.err.println(glGetProgramInfoLog(this.program, 1024));
 			System.exit(1);
 		}
@@ -169,7 +192,7 @@ public class Shader {
 					this.setUniform("transformProjected", projection.mul(transform.getTransformedTransformation()));
 					break;
 				case "materialColor" :
-					//this.setUniform("materialColor", material.getColor());
+					this.setUniform("materialColor", material.getColor());
 					break;
 			}
 		}

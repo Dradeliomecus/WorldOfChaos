@@ -23,7 +23,7 @@ public class AmbientShader extends Shader {
 	final public void updateUniforms(final @NotNull Material material, final @NotNull Transform transform) {
 		super.updateUniforms(material, transform);
 
-		//this.setUniform("ambientLight", this.getRenderingEngine().getAmbientLight());
+		this.setUniform("ambientLight", this.getRenderingEngine().getAmbientLight());
 	}
 
 	/**

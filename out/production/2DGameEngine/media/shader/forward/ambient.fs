@@ -1,19 +1,18 @@
-#version 330
+#version 150 core
 
 in vec2 textCoord0;
 
 out vec4 color;
 
-//uniform vec4 materialColor;
-//uniform vec4 ambientLight;
+uniform vec4 materialColor;
+uniform vec4 ambientLight;
 uniform sampler2D sampler;
 
 void main(){
-	if(texture2D(sampler, textCoord0).a == 0)
+	if(texture(sampler, textCoord0).a == 0)
 		discard;
 
-	//color = materialColor * ambientLight * texture(sampler, textCoord0);
-	color = vec4(1, 0, 0, 1);
+	color = materialColor * ambientLight * texture(sampler, textCoord0);
 	//gl_FragColor = vec4(materialColor.r, materialColor.g, materialColor.b, 0.5) * ambientLight * texture2D(sampler, textCoord0);
 	//gl_FragColor = ambientLight * vec4(1, 0, 0, texture2D(sampler, textCoord0).a);
 }

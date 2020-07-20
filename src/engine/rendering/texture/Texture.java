@@ -133,7 +133,7 @@ final public class Texture extends Image {
 	 * @param params Texture's parameters: 0 = id, 1 = width, 2 = height
 	 * @param attachment Texture's attachment
 	 */
-	private void createTexture(final @NotNull int[] params, int attachment) {
+	private void createTexture(final @NotNull int[] params, final int attachment) {
 		if(params.length < 3) {
 			System.err.println("Error: params has a length of " + params.length + ", 3 params are required.");
 			new Exception().printStackTrace();
@@ -165,8 +165,6 @@ final public class Texture extends Image {
 				new Exception().printStackTrace();
 				System.exit(1);
 			}
-		} else {
-			attachment = GL_NONE;
 		}
 
 		this.resource = new TextureResource(id, fbo, width, height, attachment);
@@ -261,6 +259,7 @@ final public class Texture extends Image {
 	 *
 	 * @return Texture.resource.fbo
 	 */
+	@Contract(pure = true)
 	private int getFBO() {
 		return this.getResource().getFBO();
 	}
