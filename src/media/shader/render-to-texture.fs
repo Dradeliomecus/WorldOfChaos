@@ -2,10 +2,10 @@
 
 in vec2 textCoord0;
 
-out vec4 color;
+out vec4 out_color;
 
 uniform sampler2D sampler;
 
 void main(){
-	color = texture2D(sampler, textCoord0);
+	out_color = texture(sampler, textCoord0);
 }

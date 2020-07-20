@@ -30,6 +30,8 @@ struct SpotLight {
 in vec2 worldPos0;
 in vec2 textCoord0;
 
+out vec4 out_color;
+
 uniform vec4 baseColor;
 uniform vec4 ambientLight;
 uniform sampler2D sampler;
@@ -66,7 +68,7 @@ vec4 calculateSpotLight(SpotLight spotLight) {
 }
 
 void main(){
-	vec4 color = baseColor * texture2D(sampler, textCoord0);
+	vec4 color = baseColor * texture(sampler, textCoord0);
 	vec4 totalLight = ambientLight;
 
 	for(int i = 0; i < MAX_POINT_LIGHTS; i++) {
@@ -81,5 +83,5 @@ void main(){
 		}
 	}
 
-	gl_FragColor = color * totalLight;
+	out_color = color * totalLight;
 }

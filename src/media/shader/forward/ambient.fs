@@ -2,7 +2,7 @@
 
 in vec2 textCoord0;
 
-out vec4 color;
+out vec4 out_color;
 
 uniform vec4 materialColor;
 uniform vec4 ambientLight;
@@ -12,7 +12,7 @@ void main(){
 	if(texture(sampler, textCoord0).a == 0)
 		discard;
 
-	color = materialColor * ambientLight * texture(sampler, textCoord0);
+	out_color = materialColor * ambientLight * texture(sampler, textCoord0);
 	//gl_FragColor = vec4(materialColor.r, materialColor.g, materialColor.b, 0.5) * ambientLight * texture2D(sampler, textCoord0);
 	//gl_FragColor = ambientLight * vec4(1, 0, 0, texture2D(sampler, textCoord0).a);
 }

@@ -70,10 +70,10 @@ final public class Transform {
 	 * @return new Matrix4f
 	 */
 	final public @NotNull Matrix4f getTransformedTransformation() {
-		final boolean profiling = !Profiler.isProfileTimerRunning("Render-TransformCalculation");
+		final boolean profiling = !Profiler.isProfileTimerRunning("Render-TransformCalc.");
 
 		if(profiling) {
-			Profiler.startProfileTimer("Render-TransformCalculation");
+			Profiler.startProfileTimer("Render-TransformCalc.");
 		}
 
 		if(this.hasChanged()) {
@@ -96,7 +96,7 @@ final public class Transform {
 		final Matrix4f result = parentMatrix.mul(this.getTransformation());
 
 		if(profiling) {
-			Profiler.stopProfileTimer("Render-TransformCalculation");
+			Profiler.stopProfileTimer("Render-TransformCalc.");
 		}
 
 		return result;

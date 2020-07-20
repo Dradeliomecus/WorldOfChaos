@@ -6,8 +6,10 @@ struct SpotLight {
 	float cutoff;
 };
 
-varying vec2 worldPos0;
-varying vec2 textCoord0;
+in vec2 worldPos0;
+in vec2 textCoord0;
+
+out vec4 out_color;
 
 #include "forward/lightning.fsh"
 
@@ -30,5 +32,5 @@ vec4 calculateSpotLight(SpotLight spotLight) {
 }
 
 void main(){
-	gl_FragColor = materialColor * texture2D(sampler, textCoord0) * calculateSpotLight(spotLight);
+	out_color = materialColor * texture2D(sampler, textCoord0) * calculateSpotLight(spotLight);
 }
