@@ -57,7 +57,7 @@ final public class CoreEngine {
 	public CoreEngine(final @NotNull CoreGame game) {
 		this.isRunning = false;
 
-		this.contextAttribs = new ContextAttribs(3, 3).withForwardCompatible(true);
+		this.contextAttribs = new ContextAttribs(3, 3).withForwardCompatible(true).withProfileCore(true);
 		this.createWindow(Options.WINDOW_WIDTH, Options.WINDOW_HEIGHT, Options.WINDOW_TITLE, this.contextAttribs);
 
 		if(Options.DEBUG)

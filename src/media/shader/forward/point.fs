@@ -1,7 +1,9 @@
-#version 120
+#version 150 core
 
-varying vec2 worldPos0;
-varying vec2 textCoord0;
+in vec2 worldPos0;
+in vec2 textCoord0;
+
+out vec4 out_color;
 
 #include "forward/lightning.fsh"
 
@@ -10,5 +12,5 @@ uniform sampler2D sampler;
 uniform PointLight pointLight;
 
 void main(){
-	gl_FragColor = materialColor * texture2D(sampler, textCoord0) * calculatePointLight(pointLight);
+	out_color = materialColor * texture(sampler, textCoord0) * calculatePointLight(pointLight);
 }

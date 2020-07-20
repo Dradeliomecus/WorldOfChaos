@@ -63,6 +63,21 @@ final public class Vertex {
 	}
 
 	/**
+	 * Returns a float array containing all the vertex data.
+	 *
+	 * @return new float[4]
+	 */
+	@Contract(pure = true)
+	final public @NotNull float[] getElements() {
+		return new float[] {
+			this.getPos().getX(),
+			this.getPos().getY(),
+			this.getTextureCoords().getX(),
+			this.getTextureCoords().getY()
+		};
+	}
+
+	/**
 	 * Sets the Vertex's position
 	 * Be careful! If you do not want the position to change, you should
 	 * send a copy of the Vector2f so if it changes, the position won't.

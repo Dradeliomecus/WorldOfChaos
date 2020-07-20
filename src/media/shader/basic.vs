@@ -1,13 +1,13 @@
-#version 330
+#version 150 core
 
-attribute vec2 position;
-attribute vec2 textCoord;
+in vec2 position;
+in vec2 textCoord;
 
-varying vec2 textCoord0;
+out vec2 textCoord0;
 
 uniform mat4 transform;
 
 void main(){
+	gl_Position = transform * vec4(position, 0, 1);
 	textCoord0 = textCoord;
-	gl_Position = transform * vec4(position, 0.0, 1.0);
 }

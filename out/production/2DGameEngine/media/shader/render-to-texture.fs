@@ -1,9 +1,11 @@
 #version 330
 
-varying vec2 textCoord0;
+in vec2 textCoord0;
+
+out vec4 out_color;
 
 uniform sampler2D sampler;
 
 void main(){
-	gl_FragColor = texture2D(sampler, textCoord0);
+	out_color = texture(sampler, textCoord0);
 }
