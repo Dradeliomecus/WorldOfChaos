@@ -1,5 +1,7 @@
 package engine.rendering.texture;
 
+import org.jetbrains.annotations.Contract;
+
 import java.util.ArrayList;
 
 public class TextureResource {
@@ -87,6 +89,7 @@ public class TextureResource {
      *
      * @return TextureResource.id
      */
+    @Contract(pure = true)
     final int getID() {
         return this.id;
     }
@@ -96,6 +99,7 @@ public class TextureResource {
      *
      * @return TextureResource.width
      */
+    @Contract(pure = true)
     final int getWidth() {
         return this.width;
     }
@@ -105,6 +109,7 @@ public class TextureResource {
      *
      * @return TextureResource.height
      */
+    @Contract(pure = true)
     final int getHeight() {
         return this.height;
     }
@@ -114,6 +119,7 @@ public class TextureResource {
      *
      * @return TextureResource.fbo
      */
+    @Contract(pure = true)
     final int getFBO() {
         return this.fbo;
     }
@@ -123,6 +129,7 @@ public class TextureResource {
      *
      * @return TextureResource.attachment
      */
+    @Contract(pure = true)
     final int getAttachment() {
         return this.attachment;
     }

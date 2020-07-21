@@ -195,7 +195,7 @@ final public class RenderingEngine {
 	 * @return OpenGL version.
 	 */
 	@Contract(pure = true)
-	public static String getOpenGLVersion() {
+	public static @NotNull String getOpenGLVersion() {
 		return glGetString(GL_VERSION);
 	}
 

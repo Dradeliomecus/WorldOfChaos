@@ -8,7 +8,7 @@ final public class Matrix4f{
 	/**
 	 * Matrix value.
 	 */
-	private float[][] m;
+	private @NotNull float[][] m;
 
 	/**
 	 * Creates a new Matrix4f instance.
@@ -196,7 +196,7 @@ final public class Matrix4f{
 	 *
 	 * @return Matrix4f's value
 	 */
-	final public float[][] getM() {
+	final public @NotNull float[][] getM() {
 		final float[][] m = new float[4][4];
 
 		for(int i = 0; i < 4; i++) {
@@ -226,7 +226,7 @@ final public class Matrix4f{
 	 * @param m Value to set
 	 * @throws IllegalArgumentException if m is not a float[4][4]
 	 */
-	final public void setM(final float[][] m) {
+	final public void setM(final @NotNull float[][] m) {
 		if(m.length != 4) {
 			System.err.println("Error: The value to set in the Matrix4f must be a float[4][4]\nValue set: float[" + m.length + "][" + (m.length == 0 ? "null" : ("[" + m[0].length) + "]"));
 			throw new IllegalArgumentException();

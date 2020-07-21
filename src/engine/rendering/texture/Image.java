@@ -1,5 +1,7 @@
 package engine.rendering.texture;
 
+import org.jetbrains.annotations.NotNull;
+
 abstract class Image {
 
 	/**
@@ -7,7 +9,7 @@ abstract class Image {
 	 *
 	 * @return Texture
 	 */
-	abstract Texture getTexture();
+	abstract @NotNull Texture getTexture();
 
 	/**
 	 * Updates the Image.

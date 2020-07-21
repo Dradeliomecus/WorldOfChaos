@@ -13,7 +13,7 @@ public class SpotShader extends Shader {
 	/**
 	 * SpotShader's instance.
 	 */
-	final private static SpotShader instance = new SpotShader();
+	final private static @NotNull SpotShader instance = new SpotShader();
 
 	/**
 	 * Makes a new SpotShader instance.

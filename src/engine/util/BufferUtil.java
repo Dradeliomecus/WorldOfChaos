@@ -1,7 +1,6 @@
 package engine.util;
 
 import engine.math.Matrix4f;
-import engine.rendering.Vertex;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.BufferUtils;
 
@@ -12,59 +11,13 @@ import java.nio.FloatBuffer;
 final public class BufferUtil {
 
 	/**
-	 * Creates a ByteBuffer.
-	 *
-	 * @param size Buffer's size
-	 * @return ByteBuffer with the correct size
-	 */
-	public static ByteBuffer createByteBuffer(final int size) {
-		return BufferUtils.createByteBuffer(size);
-	}
-
-	/**
-	 * Creates a FloatBuffer.
-	 *
-	 * @param size Buffer's size
-	 * @return FloatBuffer with the correct size
-	 */
-	public static FloatBuffer createFloatBuffer(final int size) {
-		return BufferUtils.createFloatBuffer(size);
-	}
-
-	/**
-	 * Creates a flipped FloatBuffer for vertices.
-	 *
-	 * @param vertices Vertex[] to put in the buffer
-	 * @return Flipped FloatBuffer with correct data
-	 */
-	public static @NotNull FloatBuffer createFlippedBuffer(final @NotNull Vertex[] vertices) {
-		final FloatBuffer buffer = createFloatBuffer(vertices.length * Vertex.SIZE);
-
-		for(final Vertex vertex : vertices) {
-			buffer.put(vertex.getPos().getX());
-			buffer.put(vertex.getPos().getY());
-			buffer.put(vertex.getTextureCoords().getX());
-			buffer.put(vertex.getTextureCoords().getY());
-			/*buffer.put(vertex.getTextureCoords().getX());
-			buffer.put(vertex.getTextureCoords().getY());
-			buffer.put(vertex.getPos().getX());
-			buffer.put(vertex.getPos().getY());*/
-			//TODO: Why is it the inverse here?
-		}
-
-		buffer.flip();
-
-		return buffer;
-	}
-
-	/**
 	 * Creates a flipped FloatBuffer for a Matrix4f.
 	 *
 	 * @param matrix Matrix4f to put in the buffer
 	 * @return Flipped FloatBuffer with correct data
 	 */
 	public static @NotNull FloatBuffer createFlippedBuffer(final Matrix4f matrix) {
-		final FloatBuffer buffer = createFloatBuffer(16);
+		final FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
 
 		for(int i = 0; i < 4; i++) {
 			for(int j = 0; j < 4; j++) {
@@ -87,7 +40,7 @@ final public class BufferUtil {
 	 * @return Flipped ByteBuffer with correct data
 	 */
 	public static @NotNull ByteBuffer createFlippedBuffer(final int width, final int height, final boolean hasAlpha, final int[] pixels) {
-		final ByteBuffer buffer = BufferUtil.createByteBuffer(width * height * 4);
+		final ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * 4);
 
 		for(int i = 0; i < height; i++) {
 			for(int j = 0; j < width; j++) {
@@ -105,7 +58,6 @@ final public class BufferUtil {
 		}
 
 		buffer.flip();
-
 		return buffer;
 	}
 

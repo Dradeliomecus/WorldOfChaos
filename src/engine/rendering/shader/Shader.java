@@ -31,14 +31,14 @@ public class Shader {
 	/**
 	 * Pointer to the rendering engine.
 	 */
-	private RenderingEngine renderingEngine;
+	private @NotNull RenderingEngine renderingEngine;
 
 	/**
 	 * Creates a new Shader instance.
 	 *
 	 * @param name Shader's name.
 	 */
-	public Shader(final String name) {
+	public Shader(final @NotNull String name) {
 		this.program = glCreateProgram();
 		this.uniforms = new HashMap<>();
 
@@ -203,7 +203,7 @@ public class Shader {
 	 *
 	 * @return Shader.renderingEngine
 	 */
-	final protected RenderingEngine getRenderingEngine() {
+	final protected @NotNull RenderingEngine getRenderingEngine() {
 		return this.renderingEngine;
 	}
 
@@ -212,7 +212,7 @@ public class Shader {
 	 *
 	 * @param renderingEngine Rendering engine to set
 	 */
-	final public void setRenderingEngine(final RenderingEngine renderingEngine) {
+	final public void setRenderingEngine(final @NotNull RenderingEngine renderingEngine) {
 		this.renderingEngine = renderingEngine;
 	}
 

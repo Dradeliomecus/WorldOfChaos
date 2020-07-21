@@ -52,7 +52,7 @@ abstract public class GameComponent implements GameInterface {
 	}
 
 	@Override
-	public GameComponent init() {
+	public @NotNull GameComponent init() {
 		return this;
 	}
 
@@ -126,7 +126,7 @@ abstract public class GameComponent implements GameInterface {
 	}
 
 	@Override
-	public void render(final Shader shader, final @Nullable ArrayList<GameComponent> renderLater) {
+	public void render(final @NotNull Shader shader, final @Nullable ArrayList<GameComponent> renderLater) {
 
 	}
 
@@ -145,7 +145,7 @@ abstract public class GameComponent implements GameInterface {
 	 *
 	 * @param coreEngine Core engine to set
 	 */
-	public void addToEngine(final CoreEngine coreEngine) {
+	public void addToEngine(final @NotNull CoreEngine coreEngine) {
 
 	}
 

@@ -16,7 +16,7 @@ abstract public class CoreGame implements GameInterface {
 	/**
 	 * Game's root object.
 	 */
-	final private RootObject root;
+	final private @NotNull RootObject root;
 
 	/**
 	 * Pointer to the rendering engine.
@@ -36,7 +36,7 @@ abstract public class CoreGame implements GameInterface {
 	 * @param coreEngine Core Engine to set
 	 * @return self
 	 */
-	final public CoreGame init(final CoreEngine coreEngine) {
+	final public @NotNull CoreGame init(final CoreEngine coreEngine) {
 		this.getRootObject().addToEngine(coreEngine);
 
 		return this;
@@ -47,7 +47,7 @@ abstract public class CoreGame implements GameInterface {
 	 *
 	 * @param child GameObject to add
 	 */
-	final protected void addToRootObject(final GameObject child) {
+	final protected void addToRootObject(final @NotNull GameObject child) {
 		this.getRootObject().addChildToRootObject(child);
 	}
 
@@ -56,7 +56,7 @@ abstract public class CoreGame implements GameInterface {
 	 *
 	 * @param child GameObject to remove
 	 */
-	final protected void removeFromRootObject(final GameObject child) {
+	final protected void removeFromRootObject(final @NotNull GameObject child) {
 		this.getRootObject().removeChildFromRootObject(child);
 	}
 
@@ -70,7 +70,7 @@ abstract public class CoreGame implements GameInterface {
 	}
 
 	@Override
-	final public void render(final Shader shader, final @Nullable ArrayList<GameComponent> renderLater) {
+	final public void render(final @NotNull Shader shader, final @Nullable ArrayList<GameComponent> renderLater) {
 		System.err.println("Error: CoreGame.render should never be called.");
 		new Exception().printStackTrace();
 		System.exit(1);
@@ -91,7 +91,7 @@ abstract public class CoreGame implements GameInterface {
 	 *
 	 * @return CoreGame.root
 	 */
-	private RootObject getRootObject() {
+	private @NotNull RootObject getRootObject() {
 		return this.root;
 	}
 
@@ -109,7 +109,7 @@ abstract public class CoreGame implements GameInterface {
 	 *
 	 * @param renderingEngine Rendering engine to set
 	 */
-	final public void setRenderingEngine(final RenderingEngine renderingEngine) {
+	final public void setRenderingEngine(final @NotNull RenderingEngine renderingEngine) {
 		this.renderingEngine = renderingEngine;
 	}
 

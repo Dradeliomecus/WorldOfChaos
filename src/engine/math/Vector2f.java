@@ -8,22 +8,22 @@ final public class Vector2f {
 	/**
 	 * Vector2f at position zero.
 	 */
-	final public static Vector2f zero = new Vector2f(0, 0);
+	final public static @NotNull Vector2f zero = new Vector2f(0, 0);
 
 	/**
 	 * X axis.
 	 */
-	final public static Vector2f xAxis = new Vector2f(1, 0);
+	final public static @NotNull Vector2f xAxis = new Vector2f(1, 0);
 
 	/**
 	 * Y axis.
 	 */
-	final public static Vector2f yAxis = new Vector2f(0, 1);
+	final public static @NotNull Vector2f yAxis = new Vector2f(0, 1);
 
 	/**
 	 * XY axis.
 	 */
-	final public static Vector2f xyAxis = new Vector2f(1, 1);
+	final public static @NotNull Vector2f xyAxis = new Vector2f(1, 1);
 
 
 	/**
@@ -145,7 +145,7 @@ final public class Vector2f {
 	 * @param a Angle to rotate in reverse clockwise (in radians)
 	 * @param center Point around which the rotation will perform
 	 */
-	final public void rotate(final float a, final Vector2f center) {
+	final public void rotate(final float a, final @NotNull Vector2f center) {
 		this.subtract(center);
 		this.rotate(a);
 		this.addition(center);
@@ -158,7 +158,7 @@ final public class Vector2f {
 	 * @return Rotates version of the Vector2f
 	 */
 	@Contract(pure = true)
-	final public Vector2f rotated(final float a) {
+	final public @NotNull Vector2f rotated(final float a) {
 		final Vector2f r = new Vector2f(this);
 
 		r.rotate(a);

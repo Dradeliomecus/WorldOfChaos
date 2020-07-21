@@ -7,7 +7,7 @@ import org.lwjgl.openal.AL;
 
 import static org.lwjgl.openal.AL10.AL_GAIN;
 import static org.lwjgl.openal.AL10.AL_NO_ERROR;
-import static org.lwjgl.openal.AL10.AL_ORIENTATION;
+//import static org.lwjgl.openal.AL10.AL_ORIENTATION;
 import static org.lwjgl.openal.AL10.AL_POSITION;
 import static org.lwjgl.openal.AL10.AL_VELOCITY;
 import static org.lwjgl.openal.AL10.alDistanceModel;
@@ -45,10 +45,10 @@ final public class AudioEngine {
 			alListener3f(AL_POSITION, 0.0f, 0.0f, 0.0f);
 		}
 
-		/*if(alGetError() != AL_NO_ERROR) {
+		if(alGetError() != AL_NO_ERROR) {
 			System.err.println("Error in the audio engine");
 			new Exception().printStackTrace();
-		}*/
+		}
 	}
 
 	/**

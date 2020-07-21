@@ -12,7 +12,7 @@ final class MenuCameraObject extends GameObject {
 	 *
 	 * @param camera Camera to set
 	 */
-	public MenuCameraObject(final Camera camera) {
+	MenuCameraObject(final Camera camera) {
 		super("Menu Camera Object", Float.MAX_VALUE, Float.MAX_VALUE);
 
 		this.setPosition(new Vector2f(Window.getRatio(), 1));

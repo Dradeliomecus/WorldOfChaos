@@ -12,7 +12,7 @@ public class PointShader extends Shader {
 	/**
 	 * PointShader's instance.
 	 */
-	final private static PointShader instance = new PointShader();
+	final private static @NotNull PointShader instance = new PointShader();
 
 	/**
 	 * Makes a new PointShader instance.

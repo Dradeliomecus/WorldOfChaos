@@ -179,7 +179,7 @@ final public class Transform {
 	 * @return new Vector2f
 	 */
 	@Contract(pure = true)
-	final public Vector2f getTransformScale() {
+	final public @NotNull Vector2f getTransformScale() {
 		final Vector2f r = new Vector2f(this.getScale());
 
 		if(this.getParent() != null) {

@@ -49,7 +49,7 @@ class TabsContentSlotCheckBoxInput extends TabsContentSlotInput {
      *
      * @param defaultStatus CheckBox default status
      */
-    public TabsContentSlotCheckBoxInput(final boolean defaultStatus) {
+    TabsContentSlotCheckBoxInput(final boolean defaultStatus) {
         super("Options Tabs check box input", TabsContentSlotCheckBoxInput.WIDTH, TabsContentSlotCheckBoxInput.HEIGHT);
 
         this.setPosition(new Vector2f(TabsContentSlotCheckBoxInput.X_POS, TabsContentSlotCheckBoxInput.Y_POS));

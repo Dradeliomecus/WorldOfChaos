@@ -12,7 +12,7 @@ public class RenderToTextureShader extends Shader {
 	/**
 	 * RenderToTextureShader's instance.
 	 */
-	final private static RenderToTextureShader instance = new RenderToTextureShader();
+	final private static @NotNull RenderToTextureShader instance = new RenderToTextureShader();
 
 	/**
 	 * Texture's position scale.

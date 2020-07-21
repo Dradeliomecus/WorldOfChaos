@@ -1,6 +1,7 @@
 package engine.game;
 
 import engine.game.objects.GameObject;
+import org.jetbrains.annotations.NotNull;
 
 final public class RootObject extends GameObject {
 
@@ -12,7 +13,7 @@ final public class RootObject extends GameObject {
 	}
 
 	@Override
-	final public RootObject init() {
+	final public @NotNull RootObject init() {
 		return this;
 	}
 
@@ -21,7 +22,7 @@ final public class RootObject extends GameObject {
 	 *
 	 * @param child GameObject to add
 	 */
-	final public void addChildToRootObject(final GameObject child) {
+	final public void addChildToRootObject(final @NotNull GameObject child) {
 		this.addChildInstantly(child);
 	}
 
@@ -30,7 +31,7 @@ final public class RootObject extends GameObject {
 	 *
 	 * @param child GameObject to remove
 	 */
-	final public void removeChildFromRootObject(final GameObject child) {
+	final public void removeChildFromRootObject(final @NotNull GameObject child) {
 		this.removeChild(child);
 	}
 

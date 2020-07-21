@@ -10,7 +10,7 @@ public class AmbientShader extends Shader {
 	/**
 	 * AmbientShader's instance.
 	 */
-	final private static AmbientShader instance = new AmbientShader();
+	final private static @NotNull AmbientShader instance = new AmbientShader();
 
 	/**
 	 * Makes a new AmbientShader instance.

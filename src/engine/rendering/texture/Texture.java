@@ -127,6 +127,22 @@ final public class Texture extends Image {
 		this(filename, GL_NONE);
 	}
 
+	@Override
+	final protected void finalize() {
+		try {
+			super.finalize();
+		} catch(final Throwable e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+
+		if(this.getResource().removeReference()) {
+			if(this.getFilename() != null) {
+				Texture.loadedTextures.remove(this.getFilename());
+			}
+		}
+	}
+
 	/**
 	 * Creates a the parameters for the texture.
 	 *
@@ -171,22 +187,6 @@ final public class Texture extends Image {
 	}
 
 	@Override
-	final protected void finalize() {
-		try {
-			super.finalize();
-		} catch(final Throwable e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
-
-		if(this.getResource().removeReference()) {
-			if(this.getFilename() != null) {
-				Texture.loadedTextures.remove(this.getFilename());
-			}
-		}
-	}
-
-	@Override
 	@Contract(pure = true)
 	final @NotNull Texture getTexture() {
 		return this;
@@ -222,6 +222,7 @@ final public class Texture extends Image {
 	 *
 	 * @return Texture.resource.id
 	 */
+	@Contract(pure = true)
 	final public int getID() {
 		return this.getResource().getID();
 	}
@@ -231,6 +232,7 @@ final public class Texture extends Image {
 	 *
 	 * @return Texture.resource.width
 	 */
+	@Contract(pure = true)
 	final public int getWidth() {
 		return this.getResource().getWidth();
 	}
@@ -240,6 +242,7 @@ final public class Texture extends Image {
 	 *
 	 * @return Texture.resource.height
 	 */
+	@Contract(pure = true)
 	final public int getHeight() {
 		return this.getResource().getHeight();
 	}
@@ -269,6 +272,7 @@ final public class Texture extends Image {
 	 *
 	 * @return Texture.resource.attachment
 	 */
+	@Contract(pure = true)
 	private int getAttachment() {
 		return this.getResource().getAttachment();
 	}

@@ -48,7 +48,7 @@ final public class Profiler {
 
 			final String child = name.substring(dashPosition + 1);
 
-			if(!Profiler.childrenTimers.containsKey(parent)) Profiler.childrenTimers.put(parent, new HashMap<String, ProfileTimer>());
+			if(!Profiler.childrenTimers.containsKey(parent)) Profiler.childrenTimers.put(parent, new HashMap<>());
 			Profiler.childrenTimers.get(parent).put(child, new ProfileTimer());
 		} else {
 			Profiler.timers.put(name, new ProfileTimer());

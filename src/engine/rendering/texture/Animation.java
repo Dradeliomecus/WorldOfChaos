@@ -1,11 +1,13 @@
 package engine.rendering.texture;
 
+import org.jetbrains.annotations.NotNull;
+
 public class Animation extends Image {
 
 	/**
 	 * Animation's textures.
 	 */
-	final private Texture[] textures;
+	final private @NotNull Texture[] textures;
 
 	/**
 	 * Time frame of the animation (in seconds).
@@ -23,14 +25,14 @@ public class Animation extends Image {
 	 * @param textures Textures to set
 	 * @param maxTime Animation length (in seconds)
 	 */
-	public Animation(final Texture[] textures, final double maxTime) {
+	public Animation(final @NotNull Texture[] textures, final double maxTime) {
 		this.textures = textures;
 		this.setTime(0);
 		this.setMaxTime(maxTime);
 	}
 
 	@Override
-	final Texture getTexture() {
+	final @NotNull Texture getTexture() {
 		return this.getCurrentTexture();
 	}
 
@@ -44,7 +46,7 @@ public class Animation extends Image {
 	 *
 	 * @return Animation.textures
 	 */
-	final protected Texture[] getTextures() {
+	final protected @NotNull Texture[] getTextures() {
 		return this.textures;
 	}
 
@@ -90,7 +92,7 @@ public class Animation extends Image {
 	 *
 	 * @return texture
 	 */
-	final public Texture getCurrentTexture() {
+	final public @NotNull Texture getCurrentTexture() {
 		return this.getTexture(this.getTextureIndex());
 	}
 

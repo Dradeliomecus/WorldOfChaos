@@ -17,6 +17,7 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -33,7 +34,7 @@ final public class File{
 	 * @param filename Image's name
 	 * @return BufferedImage loaded
 	 */
-	public static BufferedImage getImage(final String filename){
+	public static BufferedImage getImage(final @NotNull String filename){
 		return getImage(filename, true);
 	}
 
@@ -43,7 +44,7 @@ final public class File{
 	 * @param filename Images name
 	 * @return ImageIcon loaded
 	 */
-	public static ImageIcon getImageIcon(final String filename){
+	public static ImageIcon getImageIcon(final @NotNull String filename){
 		return getImageIcon(filename, true);
 	}
 
@@ -54,7 +55,7 @@ final public class File{
 	 * @param stop Is the program cut if the getImageIcon fails ?
 	 * @return ImageIcon loaded
 	 */
-	public static ImageIcon getImageIcon(final String filename, final boolean stop){
+	public static ImageIcon getImageIcon(final @NotNull String filename, final boolean stop){
 		return new ImageIcon(getImage(filename, stop));
 	}
 
@@ -65,7 +66,7 @@ final public class File{
 	 * @param stop Is the program cut if the getImage fails ?
 	 * @return BufferedImage loaded
 	 */
-	public static BufferedImage getImage(final String filename, final boolean stop){
+	public static BufferedImage getImage(final @NotNull String filename, final boolean stop){
 		try {
 			return ImageIO.read(File.class.getResourceAsStream(filename));
 		} catch(final Exception e) {
@@ -84,7 +85,7 @@ final public class File{
 	 * @param filename File's name
 	 * @return File's extension
 	 */
-	public static String getExtension(final String filename){
+	public static @NotNull String getExtension(final @NotNull String filename){
 		final String[] split = filename.split("\\.");
 		return split[split.length - 1];
 	}
@@ -95,7 +96,7 @@ final public class File{
 	 * @param filename File's name
 	 * @return StringBuilder loaded
 	 */
-	public static StringBuilder getStringBuilderFromFile(final String filename){
+	public static @NotNull StringBuilder getStringBuilderFromFile(final @NotNull String filename){
 		final StringBuilder sb = new StringBuilder();
 
 		final InputStream is = File.class.getResourceAsStream(filename);
@@ -121,7 +122,7 @@ final public class File{
 	 * @param filename File's name to load
 	 * @return Characters loaded
 	 */
-	public static ArrayList<ArrayList<Character>> getCharactersFromTextFile(String filename) {
+	public static @NotNull ArrayList<ArrayList<Character>> getCharactersFromTextFile(@NotNull String filename) {
 		if(filename.length() > 4 && !filename.substring(filename.length() - 4).equals(".txt")) {
 			filename += ".txt";
 		} else if(filename.length() <= 4) {
@@ -135,7 +136,7 @@ final public class File{
 			final BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 
 			while((line = reader.readLine()) != null) {
-				r.add(new ArrayList<Character>());
+				r.add(new ArrayList<>());
 				for(int ii = 0; ii < line.length(); ii++) {
 					r.get(i).add(line.charAt(ii));
 				}
@@ -156,7 +157,7 @@ final public class File{
 	 * @param filename File's name to read
 	 * @return Lines from a file
 	 */
-	public static ArrayList<String> getLinesFromFile(final String filename){
+	public static @NotNull ArrayList<String> getLinesFromFile(final @NotNull String filename){
 		final ArrayList<String> lines = new ArrayList<>();
 		String line;
 		try{
@@ -182,11 +183,40 @@ final public class File{
 	 * @param text Text to print
 	 */
 	public static void writeToFile(final @NotNull String fileName, final @NotNull String text) {
-		final int lastSlash = fileName.lastIndexOf('/');
-		final String parentName = fileName.substring(0, lastSlash);
-		final String filename = fileName.substring(lastSlash);
-		final java.io.File folder = new java.io.File(File.getURL(parentName).getFile()); // TODO : Check if file exists. If not, create it.
-		final java.io.File file = new java.io.File(folder.getAbsolutePath() + filename);
+		final String folderPath;
+		String temp = new String(fileName);
+
+		// Loops to find the last existing directory to mkdir.
+		while(true) {
+			final int lastSlash = temp.lastIndexOf('/');
+			if(lastSlash == -1) {
+				System.err.println("Error: Could not write to file \"" +  fileName + "\"");
+				System.err.println("Folder not found.");
+				new Exception().printStackTrace();
+				System.exit(1);
+			}
+
+			final String parentName = temp.substring(0, lastSlash);
+			final URL url = File.getURL(parentName);
+
+			if(url == null) {
+				temp = parentName;
+
+				continue;
+			}
+
+			folderPath = url.toString().substring(5) + fileName.substring(lastSlash, fileName.lastIndexOf('/'));
+			break;
+		}
+
+		final java.io.File folder = new java.io.File(folderPath);
+		if(!folder.mkdirs()) {
+			System.err.println("Error: Couldn't create folder to write to file \"" + fileName + "\"");
+			new Exception().printStackTrace();
+			System.exit(1);
+		}
+
+		final java.io.File file = new java.io.File(folderPath + fileName.substring(fileName.lastIndexOf('/')));
 
 		if(!file.exists()) {
 			try {
@@ -223,12 +253,13 @@ final public class File{
 	 * Makes all directories if they don't exist to a given file or folder.
 	 *
 	 * @param file File or folder's
+	 * @return true if directories were made.
 	 */
-	public static void makeDirectories(final @NotNull java.io.File file) {
+	public static boolean makeDirectories(final @NotNull java.io.File file) {
 		if(!file.isDirectory()) {
-			file.getParentFile().mkdirs();
+			return file.getParentFile().mkdirs();
 		} else {
-			file.mkdirs();
+			return file.mkdirs();
 		}
 	}
 
@@ -248,7 +279,7 @@ final public class File{
 	 * @param folderName Folder's name to read
 	 * @return new File
 	 */
-	public static @Nullable	java.io.File getFolder(final String folderName) {
+	public static @Nullable	java.io.File getFolder(final @NotNull String folderName) {
 		final URL path = File.getURL(folderName);
 
 		if(path == null) return null;
@@ -263,7 +294,7 @@ final public class File{
 	 * @param folderName Folder's name to read
 	 * @return new boolean
 	 */
-	public static boolean isEmpty(final String folderName) {
+	public static boolean isEmpty(final @NotNull String folderName) {
 		final java.io.File folder = File.getFolder(folderName);
 
 		return folder == null || folder.list().length == 0;
@@ -275,7 +306,7 @@ final public class File{
 	 * @param folderName Folder's name to read
 	 * @return new boolean
 	 */
-	public static boolean hasFolders(final String folderName) {
+	public static boolean hasFolders(final @NotNull String folderName) {
 		final java.io.File folder = File.getFolder(folderName);
 
 		if(folder == null) {
@@ -297,15 +328,16 @@ final public class File{
 	 * @param obj Object to serialize
 	 * @param filename File's name to write in
 	 */
-	public static void serialize(final Object obj, final String filename) {
+	public static void serialize(final @NotNull Object obj, final @NotNull String filename) {
 		final java.io.File file = new java.io.File(filename); // TODO: Check if this works (normally, I use an URL).
 		makeDirectories(file);
+
 		final ObjectOutputStream oos;
-		try{
+		try {
 			oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
 			oos.writeObject(obj);
 			oos.close();
-		}catch(final Exception e){
+		} catch(final Exception e) {
 			System.err.println("ERROR in File.serialize() with filename = " + filename + " & obj = " + obj);
 			e.printStackTrace();
 		}
@@ -317,13 +349,13 @@ final public class File{
 	 * @param filename File's name to read in
 	 * @return Object unserializes
 	 */
-	public static Object unserialize(final String filename){
-		try{
+	public static Object unserialize(final @NotNull String filename){
+		try {
 			final ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(new java.io.File(filename))));
 			final Object obj =  ois.readObject();
 			ois.close();
 			return obj;
-		}catch(final Exception e){
+		} catch(final Exception e) {
 			System.err.println("ERROR in File.unserialize() with filename = " + filename);
 			e.printStackTrace();
 			return null;
@@ -336,7 +368,7 @@ final public class File{
 	 * @param filename Music file to play
 	 * @param repeat Should the music be repeated continuously when done ?
 	 */
-	public static void playMusic(final String filename, final boolean repeat){
+	public static void playMusic(final @NotNull String filename, final boolean repeat){
 		final Clip clip = File.getMusic(filename, repeat);
 		clip.start();
 	}
@@ -348,15 +380,15 @@ final public class File{
 	 * @param repeat Should the music be repeated continuously when done ?
 	 * @return Music gotten
 	 */
-	public static Clip getMusic(final String filename, final boolean repeat){
+	public static Clip getMusic(final @NotNull String filename, final boolean repeat){
 		Clip clip = null;
-		try{
+		try {
 			final InputStream is = File.class.getResourceAsStream(filename);
 			final AudioInputStream ais = AudioSystem.getAudioInputStream(is);
 			clip = AudioSystem.getClip();
 			clip.open(ais);
 			if(repeat) clip.loop(Clip.LOOP_CONTINUOUSLY);
-		}catch(final Exception e){
+		} catch(final Exception e) {
 			System.err.println("ERROR in File.getMusic() with filename = " + filename + " & repeat = " + repeat);
 			System.err.println(filename);
 			e.printStackTrace();

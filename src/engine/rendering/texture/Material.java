@@ -2,25 +2,26 @@ package engine.rendering.texture;
 
 import engine.util.Color;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 final public class Material {
 
 	/**
 	 * Material's Image.
 	 */
-	private Image image;
+	private @NotNull Image image;
 
 	/**
 	 * Material's Color.
 	 */
-	private Color color;
+	private @NotNull Color color;
 
 	/**
 	 * Creates a new Material instance.
 	 *
 	 * @param image Image to set
 	 */
-	public Material(final Image image) {
+	public Material(final @NotNull Image image) {
 		this(image, new Color());
 	}
 
@@ -30,7 +31,7 @@ final public class Material {
 	 * @param image Image to set
 	 * @param color Color to set
 	 */
-	public Material(final Image image, final Color color) {
+	public Material(final @NotNull Image image, final @NotNull Color color) {
 		this.set(image, color);
 	}
 
@@ -49,7 +50,7 @@ final public class Material {
 	 * @return Material.image
 	 */
 	@Contract(pure = true)
-	final public Image getImage() {
+	final public @NotNull Image getImage() {
 		return this.image;
 	}
 
@@ -58,7 +59,7 @@ final public class Material {
 	 *
 	 * @return Material.image.texture
 	 */
-	final public Texture getTexture() {
+	final public @NotNull Texture getTexture() {
 		return this.getImage().getTexture();
 	}
 
@@ -68,7 +69,7 @@ final public class Material {
 	 * @return Material's color
 	 */
 	@Contract(pure = true)
-	final public Color getColor() {
+	final public @NotNull Color getColor() {
 		return this.color;
 	}
 
@@ -88,7 +89,7 @@ final public class Material {
 	 *
 	 * @param image Image to set
 	 */
-	final public void setImage(final Image image) {
+	final public void setImage(final @NotNull Image image) {
 		this.image = image;
 	}
 
@@ -97,7 +98,7 @@ final public class Material {
 	 *
 	 * @param color Color to set
 	 */
-	final public void setColor(final Color color) {
+	final public void setColor(final @NotNull Color color) {
 		this.color = color;
 	}
 

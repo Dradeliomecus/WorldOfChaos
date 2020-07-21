@@ -19,7 +19,7 @@ public class RenderedComponent extends GameComponent {
 	/**
 	 * RenderedComponent's material.
 	 */
-	private Material material;
+	private @NotNull Material material;
 
 	/**
 	 * True = component is rendered later (e.g. because of 0 < opacity < 1).
@@ -33,7 +33,7 @@ public class RenderedComponent extends GameComponent {
 	 * @param width Width to set
 	 * @param height Height to set
 	 */
-	public RenderedComponent(final Material material, final float width, final float height){
+	public RenderedComponent(final @NotNull Material material, final float width, final float height){
 		this(Mesh.create(width, height), material, width, height);
 	}
 
@@ -45,7 +45,7 @@ public class RenderedComponent extends GameComponent {
 	 * @param height Height to set
 	 * @param renderedLater Is the component rendered later?
 	 */
-	public RenderedComponent(final Material material, final float width, final float height, final boolean renderedLater){
+	public RenderedComponent(final @NotNull Material material, final float width, final float height, final boolean renderedLater){
 		this(Mesh.create(width, height), material, width, height, renderedLater);
 	}
 
@@ -57,7 +57,7 @@ public class RenderedComponent extends GameComponent {
 	 * @param width Width to set
 	 * @param height Height to set
 	 */
-	public RenderedComponent(final @NotNull Mesh mesh, final Material material, final float width, final float height){
+	public RenderedComponent(final @NotNull Mesh mesh, final @NotNull Material material, final float width, final float height){
 		this(mesh, material, width, height, false);
 	}
 
@@ -70,7 +70,7 @@ public class RenderedComponent extends GameComponent {
 	 * @param height Height to set
 	 * @param renderedLater Is the component rendered later?
 	 */
-	public RenderedComponent(final @NotNull Mesh mesh, final Material material, final float width, final float height, final boolean renderedLater){
+	public RenderedComponent(final @NotNull Mesh mesh, final @NotNull Material material, final float width, final float height, final boolean renderedLater){
 		super(width, height);
 		this.set(mesh, material);
 
@@ -88,7 +88,7 @@ public class RenderedComponent extends GameComponent {
 	 * @return RenderedComponent.material
 	 */
 	@Contract(pure = true)
-	final public Material getMaterial(){
+	final public @NotNull Material getMaterial(){
 		return this.material;
 	}
 
@@ -127,7 +127,7 @@ public class RenderedComponent extends GameComponent {
 	 *
 	 * @param material Material to set
 	 */
-	final public void setMaterial(final Material material){
+	final public void setMaterial(final @NotNull Material material){
 		this.material = material;
 	}
 
