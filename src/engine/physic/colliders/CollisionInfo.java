@@ -1,5 +1,6 @@
 package engine.physic.colliders;
 
+import engine.math.Vector2f;
 import engine.util.Position;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -8,34 +9,41 @@ import org.jetbrains.annotations.Nullable;
 public class CollisionInfo {
 
 	/**
-	 * A collider that represents everywhere the 2 shapes intersect.
+	 * Position of the original collider when collision occurs.
 	 */
-	private @NotNull Collider collisionArea;
+	final private @NotNull Position collisionPosition;
 
 	/**
 	 * A point where the collision began.
 	 */
-	private @Nullable Position collisionPoint;
+	final private @NotNull Position collisionPoint;
+
+	/**
+	 * Vector starting at collisionPoint that gives the tangent on collision.
+	 */
+	final private @Nullable Vector2f collisionTangent;
 
 	/**
 	 * Creates a new CollisionInfo instance.
 	 *
-	 * @param collisionArea Shape that represents everywhere there is an intersection.
+	 * @param collisionPosition Position of original collider when collision occurs.
 	 * @param collisionPoint Point where the collision began (sends a copy and not the pointer).
+	 * @param collisionTangent Tangent with the collider during collision (vector starts at collisionPoint).
 	 */
-	CollisionInfo(final @NotNull Collider collisionArea, final @Nullable Position collisionPoint) {
-		this.collisionArea = collisionArea;
+	CollisionInfo(final @NotNull Position collisionPosition, final @Nullable Position collisionPoint, final @Nullable Vector2f collisionTangent) {
+		this.collisionPosition = collisionPosition;
 		this.collisionPoint = collisionPoint == null ? null : new Position(collisionPoint);
+		this.collisionTangent = collisionTangent == null ? null : new Vector2f(collisionTangent);
 	}
 
 	/**
-	 * Returns everywhere the 2 shapes intersect.
+	 * Returns the position of original collider when collision occurs (returns a copy and not the pointer).
 	 *
 	 * @return CollisionInfo.collisionArea
 	 */
 	@Contract(pure = true)
-	final public @NotNull Collider getCollisionArea() {
-		return this.collisionArea;
+	final public @NotNull Position getCollisionPosition() {
+		return new Position(this.collisionPosition);
 	}
 
 	/**
@@ -44,8 +52,18 @@ public class CollisionInfo {
 	 * @return CollisionInfo.collisionPoint
 	 */
 	@Contract(pure = true)
-	final public @Nullable Position getCollisionPoint() {
-		return collisionPoint == null ? null : new Position(this.collisionPoint);
+	final public @NotNull Position getCollisionPoint() {
+		return new Position(this.collisionPoint);
+	}
+
+	/**
+	 * Returns the collision tangent (returns a copy and not the pointer).
+	 *
+	 * @return CollisionInfo.collisionTangent
+	 */
+	@Contract(pure = true)
+	final public @Nullable Vector2f getCollisionTangent() {
+		return this.collisionTangent == null ? null : new Vector2f(this.collisionTangent);
 	}
 
 }

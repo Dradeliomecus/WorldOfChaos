@@ -49,7 +49,7 @@ final public class CoreEngine {
 	public CoreEngine(final @NotNull CoreGame game) {
 		this.isRunning = false;
 
-		this.createWindow(Options.WINDOW_WIDTH, Options.WINDOW_HEIGHT, Options.WINDOW_TITLE);
+		this.createWindow();
 
 		this.renderingEngine = new RenderingEngine();
 		game.setRenderingEngine(this.renderingEngine);
@@ -254,13 +254,9 @@ final public class CoreEngine {
 
 	/**
 	 * Creates the main window for the application and initializes the graphics.
-	 *
-	 * @param width Window's width (in px)
-	 * @param height Window's height (in px)
-	 * @param title Window title
 	 */
-	private void createWindow(final int width, final int height, final String title) {
-		Window.create(width, height, title);
+	private void createWindow() {
+		Window.create(Options.WINDOW_WIDTH, Options.WINDOW_HEIGHT, Options.WINDOW_TITLE);
 	}
 
 }

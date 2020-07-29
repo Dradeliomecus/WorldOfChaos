@@ -16,10 +16,20 @@ public abstract class Collider {
 	 * Returns null if no collision was found (may be empty with collision under certain circumstances).
 	 *
 	 * @param collider Collider to check with
-	 * @return new ArrayList<Position>
+	 * @param prevPos Previous position of (this) collider.
+	 * @return new CollisionInfo
 	 */
 	@Contract(pure = true)
-	public abstract @Nullable CollisionInfo intersect(final @NotNull Collider collider);
+	public abstract @Nullable CollisionInfo intersect(final @NotNull Collider collider, final @NotNull Position prevPos);
+
+	/**
+	 * Generic function that enables to calculate motion.
+	 * Position can be any point, as long as translation of collider translate into translation of position.
+	 *
+	 * @return Position
+	 */
+	@Contract(pure = true)
+	public abstract @NotNull Position getPosition();
 
 	/**
 	 * Returns whether the point is inside the collider.

@@ -3,51 +3,26 @@ package engine.math;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public class Matrix<T extends Number> {
-
-	/**
-	 * Matrix' number of rows.
-	 */
-	final private int M;
-
-	/**
-	 * Matrix' number of columns.
-	 */
-	final private int N;
+public class Matrix2l {
 
 	/**
 	 * Matrix value.
 	 */
-	private @NotNull T[][] m;
+	private @NotNull long[][] m;
 
 	/**
-	 * Create a new Matrix instance.
-	 *
-	 * @param M Number of rows
-	 * @param N Number of columns
+	 * Create a new Matrix2l instance.
 	 */
-	public Matrix(final int M, final int N) {
-		if(M < 1 || N < 1) {
-			System.err.println("Error: tried to create a Matrix of size M=" + M + " ; N=" + N);
-			new Exception().printStackTrace();
-			System.exit(1);
-		}
-
-		this.M = M;
-		this.N = N;
-
-		this.m = (T[][]) new Number[M][N];
+	public Matrix2l() {
+		this.m = new long[2][2];
 	}
 
 	/**
-	 * Creates a copy of a Matrix.
+	 * Creates a copy of a Matrix2l.
 	 *
-	 * @param m Matrix to copy
+	 * @param m Matrix2l to copy
 	 */
-	public Matrix(final @NotNull Matrix<T> m) {
-		this.M = m.M;
-		this.N = m.N;
-
+	public Matrix2l(final @NotNull Matrix2l m) {
 		this.m = m.getM();
 	}
 
@@ -55,8 +30,8 @@ public class Matrix<T extends Number> {
 	final public String toString() {
 		String string = super.toString() + "\n";
 
-		for(int i = 0; i < this.M; i++) {
-			for(int j = 0; j < this.N; j++) {
+		for(int i = 0; i < 2; i++) {
+			for(int j = 0; j < 2; j++) {
 				string += this.get(i, j) + " ";
 			}
 			string += "\n";
@@ -70,17 +45,10 @@ public class Matrix<T extends Number> {
 	 *
 	 * @return (this)
 	 */
-	final public @NotNull Matrix<T> initIdentity() {
-		if(!this.isSquare()) {
-			System.err.println("Error: Cannot create identity matrix of non-square matrix.");
-			System.err.println("Current matrix is of size " + M + 'x' + N);
-			new Exception().printStackTrace();
-			return this;
-		}
-
-		for(int i = 0; i < this.M; i++) {
-			for(int j = 0; j < this.N; j++) {
-				this.set(i, j, i == j ? (T)((Number) 1) : (T)((Number) 0));
+	final public @NotNull Matrix2l initIdentity() {
+		for(int i = 0; i < 2; i++) {
+			for(int j = 0; j < 2; j++) {
+				this.set(i, j, i == j ? 1 : 0);
 			}
 		}
 
@@ -88,23 +56,23 @@ public class Matrix<T extends Number> {
 	}
 
 	/**
-	 * Returns true if (this) is a square-matrix (M = N).
+	 * Returns the matrix2l's determinant.
 	 *
-	 * @return new boolean
+	 * @return new long
 	 */
-	final public boolean isSquare() {
-		return this.M == this.N;
+	final public long det() {
+		return this.m[0][0]*this.m[1][1] - this.m[0][1]*this.m[1][0];
 	}
 
 	/**
-	 * Returns a copy of the Matrix' value.
+	 * Returns a copy of the Matrix2l's value.
 	 *
-	 * @return Matrix' value
+	 * @return Matrix2l's value
 	 */
-	final public @NotNull T[][] getM() {
-		final T[][] matrix = this.m.clone();
+	final public @NotNull long[][] getM() {
+		final long[][] matrix = this.m.clone();
 
-		for(int i=0; i<this.M; i++) {
+		for(int i=0; i<2; i++) {
 			matrix[i] = matrix[i].clone();
 		}
 
@@ -112,26 +80,26 @@ public class Matrix<T extends Number> {
 	}
 
 	/**
-	 * Returns the Matrix' value at [x][y].
+	 * Returns the Matrix2l's value at [x][y].
 	 *
-	 * @param x Matrix' row
-	 * @param y Matrix' column
+	 * @param x Matrix2l's row
+	 * @param y Matrix2l's column
 	 * @return Matrix's value[x][y]
 	 */
 	@Contract(pure = true)
-	final public @NotNull T get(final int x, final int y) {
+	final public long get(final int x, final int y) {
 		return this.m[x][y];
 	}
 
 	/**
-	 * Sets the Matrix' value.
+	 * Sets the Matrix2l's value.
 	 *
 	 * @param m Value to set
-	 * @throws IllegalArgumentException if m is not a T[M][N]
+	 * @throws IllegalArgumentException if m is not a long[2][2]
 	 */
-	final public void setM(final @NotNull T[][] m) {
-		if(m.length != this.M || m[0].length != this.N) {
-			System.err.println("Error: The value to set in the Matrix2f must be a float[" + this.M + "][2=" + this.N + "]");
+	final public void setM(final @NotNull long[][] m) {
+		if(m.length != 2 || m[0].length != 2) {
+			System.err.println("Error: The value to set in the Matrix2f must be a float[2][2]");
 			System.err.println("Value set: float[" + m.length + "][" + (m.length == 0 ? "null" : ("[" + m[0].length) + "]"));
 			throw new IllegalArgumentException();
 		}
@@ -140,13 +108,13 @@ public class Matrix<T extends Number> {
 	}
 
 	/**
-	 * Sets the Matrix' value at [x][y].
+	 * Sets the Matrix2l's value at [x][y].
 	 *
-	 * @param x Matrix' row
-	 * @param y Matrix' column
+	 * @param x Matrix2l's row
+	 * @param y Matrix2l's column
 	 * @param value Value to set
 	 */
-	final public void set(final int x, final int y, final @NotNull T value) {
+	final public void set(final int x, final int y, final long value) {
 		this.m[x][y] = value;
 	}
 
@@ -155,26 +123,41 @@ public class Matrix<T extends Number> {
 	 * Does not change the value of (this).
 	 *
 	 * @param m Matrix to add
-	 * @return new Matrix
+	 * @return new Matrix2l
 	 */
-	final public Matrix<T> add(final @NotNull Matrix<T> m) {
-		if(this.M != m.M || this.N != m.N) {
-			System.err.println("Error: Could not add the 2 matrices as they do not have the same size");
-			System.err.println("this is of size " + this.M + 'x' + this.N);
-			System.err.println("m is of size " + m.M + 'x' + m.N);
-			new Exception().printStackTrace();
-			return null;
-		}
+	final public @NotNull Matrix2l add(final @NotNull Matrix2l m) {
+		final Matrix2l result = new Matrix2l();
 
-		final Matrix<T> matrix = new Matrix<>(this.M, this.N);
-
-		for(int i=0; i<this.M; i++) {
-			for(int j=0; j<this.N; j++) {
-				matrix.set(i, j, this.get(i, j) + m.get(i, j));
+		for(int i=0; i<2; i++) {
+			for(int j=0; j<2; j++) {
+				result.set(i, j, this.get(i, j) + m.get(i, j));
 			}
 		}
 
-		return matrix;
+		return result;
+	}
+
+	/**
+	 * Returns the result of (this) * m.
+	 * Does not change the value of (this).
+	 *
+	 * @param m Matrix2l to multiply by
+	 * @return new Matrix2l
+	 */
+	@Contract(pure = true)
+	final public @NotNull Matrix2l mul(final @NotNull Matrix2l m) {
+		final Matrix2l result = new Matrix2l();
+
+		for(int i = 0; i < 2; i++) {
+			for(int j = 0; j < 2; j++) {
+				result.set(i, j,
+					this.get(i, 0) * m.get(0, j) +
+					this.get(i, 1) * m.get(1, j)
+				);
+			}
+		}
+
+		return result;
 	}
 
 }

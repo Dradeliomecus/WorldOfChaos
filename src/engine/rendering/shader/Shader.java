@@ -123,6 +123,7 @@ public class Shader {
 
 		if(glGetShader(shader, GL_COMPILE_STATUS) == 0) {
 			System.err.println(glGetShaderInfoLog(shader, 1024));
+			new Exception().printStackTrace();
 			System.exit(1);
 		}
 
@@ -138,6 +139,7 @@ public class Shader {
 
 		if(glGetProgram(this.program, GL_LINK_STATUS) == 0) {
 			System.err.println(glGetProgramInfoLog(this.program, 1024));
+			new Exception().printStackTrace();
 			System.exit(1);
 		}
 
@@ -145,6 +147,7 @@ public class Shader {
 
 		if(glGetProgram(this.program, GL_VALIDATE_STATUS) == 0) {
 			System.err.println(glGetProgramInfoLog(this.program, 1024));
+			new Exception().printStackTrace();
 			System.exit(1);
 		}
 	}

@@ -3,7 +3,7 @@ package engine.math;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-final public class Matrix4f{
+final public class Matrix4f {
 
 	/**
 	 * Matrix value.
@@ -15,6 +15,15 @@ final public class Matrix4f{
 	 */
 	public Matrix4f() {
 		this.m = new float[4][4];
+	}
+
+	/**
+	 * Creates a new Matrix4f instance.
+	 *
+	 * @param m Value to set
+	 */
+	public Matrix4f(final @NotNull float[][] m) {
+		this.setM(m);
 	}
 
 	/**
@@ -171,7 +180,7 @@ final public class Matrix4f{
 	 * Returns the multiplication between the Matrix4f and r.
 	 *
 	 * @param r Matrix4f to multiply by
-	 * @return multiplication between the Matrix4f and r
+	 * @return Multiplication between the Matrix4f and r
 	 */
 	@Contract(pure = true)
 	final public @NotNull Matrix4f mul(final @NotNull Matrix4f r) {
@@ -196,7 +205,7 @@ final public class Matrix4f{
 	 *
 	 * @return Matrix4f's value
 	 */
-	final public float[][] getM() {
+	final public @NotNull float[][] getM() {
 		final float[][] m = new float[4][4];
 
 		for(int i = 0; i < 4; i++) {
@@ -226,17 +235,11 @@ final public class Matrix4f{
 	 * @param m Value to set
 	 * @throws IllegalArgumentException if m is not a float[4][4]
 	 */
-	final public void setM(final float[][] m) {
-		if(m.length != 4) {
-			System.err.println("Error: The value to set in the Matrix4f must be a float[4][4]\nValue set: float[" + m.length + "][" + (m.length == 0 ? "null" : ("[" + m[0].length) + "]"));
+	final public void setM(final @NotNull float[][] m) {
+		if(m.length != 4 || m[0].length != 4) {
+			System.err.println("Error: The value to set in the Matrix4f must be a float[4][4]");
+			System.err.println("Value set: float[" + m.length + "][" + (m.length == 0 ? "null" : ("[" + m[0].length) + "]"));
 			throw new IllegalArgumentException();
-		} else {
-			for(int i = 0; i < 4; i++) {
-				if(m[i].length != 4) {
-					System.err.println("Error: The value to set in the Matrix4f must be a float[4][4]\nfloat[" + i + "] has a length of " + m[i].length);
-					throw new IllegalArgumentException();
-				}
-			}
 		}
 
 		this.m = m;
