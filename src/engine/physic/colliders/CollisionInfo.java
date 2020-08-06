@@ -30,9 +30,9 @@ public class CollisionInfo {
 	 * @param collisionPoint Point where the collision began (sends a copy and not the pointer).
 	 * @param collisionTangent Tangent with the collider during collision (vector starts at collisionPoint).
 	 */
-	CollisionInfo(final @NotNull Position collisionPosition, final @Nullable Position collisionPoint, final @Nullable Vector2f collisionTangent) {
-		this.collisionPosition = collisionPosition;
-		this.collisionPoint = collisionPoint == null ? null : new Position(collisionPoint);
+	CollisionInfo(final @NotNull Position collisionPosition, final @NotNull Position collisionPoint, final @Nullable Vector2f collisionTangent) {
+		this.collisionPosition = new Position(collisionPosition);
+		this.collisionPoint = new Position(collisionPoint);
 		this.collisionTangent = collisionTangent == null ? null : new Vector2f(collisionTangent);
 	}
 

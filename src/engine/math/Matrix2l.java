@@ -1,5 +1,6 @@
 package engine.math;
 
+import engine.util.Position;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -116,6 +117,28 @@ public class Matrix2l {
 	 */
 	final public void set(final int x, final int y, final long value) {
 		this.m[x][y] = value;
+	}
+
+	/**
+	 * Sets a Matrix2l's row.
+	 *
+	 * @param row Row's index
+	 * @param pos Row to set
+	 */
+	final public void setRow(final int row, final @NotNull Position pos) {
+		this.m[row][0] = pos.getX();
+		this.m[row][1] = pos.getY();
+	}
+
+	/**
+	 * Sets a Matrix2l's column.
+	 *
+	 * @param col Column's index
+	 * @param pos Column to set
+	 */
+	final public void setCol(final int col, final @NotNull Position pos) {
+		this.m[0][col] = pos.getX();
+		this.m[1][col] = pos.getY();
 	}
 
 	/**

@@ -158,7 +158,7 @@ final public class Vector2f {
 	 * @return Rotates version of the Vector2f
 	 */
 	@Contract(pure = true)
-	final public Vector2f rotated(final float a) {
+	final public @NotNull Vector2f rotated(final float a) {
 		final Vector2f r = new Vector2f(this);
 
 		r.rotate(a);
