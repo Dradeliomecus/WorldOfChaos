@@ -33,7 +33,7 @@ public class CollisionInfo {
 	CollisionInfo(final @NotNull Position collisionPosition, final @NotNull Position collisionPoint, final @Nullable Vector2f collisionTangent) {
 		this.collisionPosition = new Position(collisionPosition);
 		this.collisionPoint = new Position(collisionPoint);
-		this.collisionTangent = collisionTangent == null ? null : new Vector2f(collisionTangent);
+		this.collisionTangent = collisionTangent == null ? null : collisionTangent.normalized();
 	}
 
 	/**

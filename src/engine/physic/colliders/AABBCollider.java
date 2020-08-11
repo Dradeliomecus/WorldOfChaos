@@ -118,14 +118,20 @@ public class AABBCollider extends Collider {
 			&& point.getY() <= this.getPosition().getY() + this.getHeight();
 	}
 
-	/**
-	 * Returns a copy of the AABB's position (and not the pointer).
-	 *
-	 * @return new Position(AABBCollider.position)
-	 */
+	@Override
 	@Contract(pure = true)
 	final public @NotNull Position getPosition() {
 		return new Position(this.position);
+	}
+
+	/**
+	 * Returns the AABB's bottom-left corner.
+	 *
+	 * @return AABBCollider.position
+	 */
+	@Contract(pure = true)
+	final public @NotNull Position getMinExtents() {
+		return this.getPosition();
 	}
 
 	/**

@@ -44,11 +44,13 @@ public class PointCollider extends Collider {
 		final SegmentCollider trajectory = new SegmentCollider(prevPos, this.getPosition());
 
 		if(collider instanceof PointCollider) {
-			if(trajectory.containsOrOn(collider.getPosition()) && !prevPos.equals(collider.getPosition())) {
-				final Vector2f direction = collider.getPosition().sub(prevPos).asVector2f(); // Perpendicular to the tangent.
-				final Vector2f tangent = new Vector2f(direction.getY(), -direction.getX());
-				return new CollisionInfo(collider.getPosition(), collider.getPosition(), tangent);
+			if(!trajectory.containsOrOn(collider.getPosition()) || prevPos.equals(collider.getPosition())) {
+				return null;
 			}
+
+			final Vector2f direction = collider.getPosition().sub(prevPos).asVector2f(); // Perpendicular to the tangent.
+			final Vector2f tangent = new Vector2f(direction.getY(), -direction.getX());
+			return new CollisionInfo(collider.getPosition(), collider.getPosition(), tangent);
 		} else if(collider instanceof SegmentCollider) {
 			// For the math, look at: https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection#Given_two_points_on_each_line
 			final SegmentCollider segmentCollider = (SegmentCollider) collider;
@@ -99,9 +101,75 @@ public class PointCollider extends Collider {
 				return new CollisionInfo(collisionPoint, collisionPoint, segmentCollider.getP1().sub(segmentCollider.getP2()).asVector2f());
 			}
 		} else if(collider instanceof AABBCollider) {
-			// For the math, look at: https://gist.github.com/ChickenProp/3194723
+			// For the math, look at: https://en.wikipedia.org/wiki/Liang%E2%80%93Barsky_algorithm
+			final AABBCollider aabbCollider = (AABBCollider) collider;
 			
-			// TODO.
+			if(aabbCollider.contains(prevPos)) {
+				return new CollisionInfo(prevPos, prevPos, null);
+			}
+
+			final long[] p = new long[] {
+				prevPos.getX() - this.position.getX(),
+				this.position.getX() - prevPos.getX(),
+				prevPos.getY() - this.position.getY(),
+				this.position.getY() - prevPos.getY()
+			};
+			final long[] q = new long[] {
+				prevPos.getX() - aabbCollider.getMinExtents().getX(),
+				aabbCollider.getMaxExtents().getX() - prevPos.getX(),
+				prevPos.getY() - aabbCollider.getMinExtents().getY(),
+				aabbCollider.getMaxExtents().getY() - prevPos.getY()
+			};
+
+			for(int i=0; i<4; i++) {
+				if(p[i] == 0 && q[i] <= 0) {
+					return null;
+				}
+			}
+
+			// Values of t in line parametric equations where u is first collision point, v the second one.
+			double u = 0;
+			double v = 1;
+
+			if(p[0] != 0) {
+				final double r0 = (double) q[0] / p[0];
+				final double r1 = (double) q[1] / p[1];
+
+				u = Math.max(u, p[0]<0 ? r0 : r1);
+				v = Math.min(v, p[0]<0 ? r1 : r0);
+			}
+			if(p[2] != 0) {
+				final double r2 = (double) q[2] / p[2];
+				final double r3 = (double) q[3] / p[3];
+
+				u = Math.max(u, p[2]<0 ? r2 : r3);
+				v = Math.min(v, p[2]<0 ? r3 : r2);
+			}
+
+			if(u > v) { // No intersection.
+				return null;
+			}
+
+			final long x0 = prevPos.getX() + Math.round(p[1] * u);
+			final long y0 = prevPos.getY() + Math.round(p[3] * u);
+
+			final Position collisionPoint = new Position(x0, y0);
+			final Vector2f tangent;
+
+			// TODO: There might be a better way to compute the tangent.
+			if((collisionPoint.getX() == aabbCollider.getMinExtents().getX() || collisionPoint.getX() == aabbCollider.getMaxExtents().getX()) &&
+			   (collisionPoint.getY() != aabbCollider.getMinExtents().getY() && collisionPoint.getY() != aabbCollider.getMaxExtents().getY())) {
+				tangent = new Vector2f(0, 1);
+			} else if((collisionPoint.getY() == aabbCollider.getMinExtents().getY() || collisionPoint.getY() == aabbCollider.getMaxExtents().getY()) &&
+					  (collisionPoint.getX() != aabbCollider.getMinExtents().getX() && collisionPoint.getX() != aabbCollider.getMaxExtents().getX())) {
+				tangent = new Vector2f(1, 0);
+			} else if(collisionPoint.distanceToXY(aabbCollider.getMinExtents()) < 1 || collisionPoint.distanceToXY(aabbCollider.getMaxExtents()) < 1) {
+				tangent = new Vector2f(1, -1);
+			} else {
+				tangent = new Vector2f(1, 1);
+			}
+
+			return new CollisionInfo(collisionPoint, collisionPoint, tangent);
 		} else if(collider instanceof CircleCollider) {
 			// For the math, look at: https://en.wikipedia.org/wiki/Intersection_(Euclidean_geometry)#A_line_and_a_circle
 			// Shift everything so that center of the circle is 0, and the line becomes ax + by + c = 0
@@ -121,6 +189,7 @@ public class PointCollider extends Collider {
 			}
 			D = Math.round(Math.sqrt(D));
 
+			// TODO: From this point, isn't there a better way?
 			final Position collisionPoint; // Need to determine which of the 2 possible collision points are the first one.
 			final Position collision1 = new Position((a*c - b*D)/denominator, (b*c + a*D)/denominator);
 			final Position collision2 = new Position((a*c + b*D)/denominator, (b*c - a*D)/denominator);
@@ -145,11 +214,12 @@ public class PointCollider extends Collider {
 			final Vector2f tangent = new Vector2f(direction.getY(), -direction.getX());
 
 			return new CollisionInfo(collisionPoint, collisionPoint, tangent);
-		} else {
-			System.err.println("Error: Collision between PointCollider and " + collider + " isn't implemented yet.");
-			return null;
 		}
 
+		System.err.println("Error: Collision between PointCollider and " + collider + " isn't implemented yet.");
+		System.err.println("Or the collision has been mishandled.");
+		System.err.println("\t- prevPos = " + prevPos);
+		System.err.println("\t- pos = " + this.position);
 		return null;
 	}
 
